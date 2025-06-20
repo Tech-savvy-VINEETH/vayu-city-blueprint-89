@@ -36,19 +36,19 @@ const Navigation = () => {
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <Wind className="h-8 w-8 text-vayu-mint" />
-            <span className="text-xl font-bold text-vayu-dark">AeroSage Vayu</span>
+          {/* Logo - Fixed styling for single line display */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <Wind className="h-7 w-7 text-vayu-mint flex-shrink-0" />
+            <span className="text-lg md:text-xl font-bold text-vayu-dark whitespace-nowrap">AeroSage Vayu</span>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium"
+                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium text-sm lg:text-base"
               >
                 {item.name}
               </a>
@@ -56,9 +56,9 @@ const Navigation = () => {
           </div>
 
           {/* Right side with CTA and Auth */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3 lg:space-x-4 flex-shrink-0">
             <Link to="/eco-routing">
-              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105">
+              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-4 lg:px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105 text-sm lg:text-base">
                 Live AQI Map
               </Button>
             </Link>
@@ -68,7 +68,7 @@ const Navigation = () => {
                 <UserMenu />
               ) : (
                 <Link to="/auth">
-                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white">
+                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white text-sm lg:text-base">
                     <LogIn className="h-4 w-4 mr-2" />
                     Sign In
                   </Button>
@@ -78,7 +78,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex-shrink-0">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200"
