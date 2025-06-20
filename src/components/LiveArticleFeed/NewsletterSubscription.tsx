@@ -32,7 +32,6 @@ const NewsletterSubscription = () => {
         .insert([
           {
             email: email.toLowerCase().trim(),
-            subscribed_at: new Date().toISOString(),
             is_active: true
           }
         ]);
