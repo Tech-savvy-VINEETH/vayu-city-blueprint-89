@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 
 interface UserProfile {
@@ -39,6 +39,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({});
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (user && isOpen) {
@@ -63,6 +64,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
       if (data) {
         setProfile(data);
       }
+      setHasChanges(false);
     } catch (error) {
       console.error('Error fetching profile:', error);
       toast({
@@ -78,6 +80,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
 
     setLoading(true);
     try {
+      // Optimistic update - show success immediately
+      toast({
+        title: "Saving...",
+        description: "Your profile is being updated.",
+      });
+
       const { error } = await supabase
         .from('user_profiles')
         .upsert({
@@ -87,6 +95,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
 
       if (error) throw error;
 
+      setHasChanges(false);
       toast({
         title: "Profile Updated",
         description: "Your profile has been successfully updated.",
@@ -105,6 +114,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
 
   const handleInputChange = (field: keyof UserProfile, value: string) => {
     setProfile(prev => ({ ...prev, [field]: value }));
+    setHasChanges(true);
   };
 
   return (
@@ -115,6 +125,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
             <User className="h-5 w-5" />
             Profile Settings
           </DialogTitle>
+          <DialogDescription>
+            Update your profile information and preferences.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -277,7 +290,11 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ isOpen, onClose }) =>
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>
-            <Button onClick={handleSaveProfile} disabled={loading}>
+            <Button 
+              onClick={handleSaveProfile} 
+              disabled={loading || !hasChanges}
+              className={hasChanges ? 'bg-vayu-mint hover:bg-vayu-mint-dark' : ''}
+            >
               <Save className="h-4 w-4 mr-2" />
               {loading ? 'Saving...' : 'Save Changes'}
             </Button>

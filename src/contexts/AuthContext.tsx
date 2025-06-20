@@ -9,6 +9,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithPhone: (phone: string) => Promise<{ error: any }>;
+  verifyOTP: (phone: string, otp: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -23,9 +25,9 @@ export const useAuth = () => {
 };
 
 // Function to store login credentials
-const storeLoginCredentials = async (user: User, email: string, loginMethod: string = 'email_password') => {
+const storeLoginCredentials = async (user: User, identifier: string, loginMethod: string = 'email_password') => {
   try {
-    // Get user's IP and user agent
+    // Get user's user agent
     const userAgent = navigator.userAgent;
     
     // Store credentials in the database
@@ -33,7 +35,7 @@ const storeLoginCredentials = async (user: User, email: string, loginMethod: str
       .from('user_credentials')
       .insert({
         user_id: user.id,
-        email: email,
+        email: identifier,
         login_timestamp: new Date().toISOString(),
         user_agent: userAgent,
         login_method: loginMethod
@@ -64,7 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Store credentials when user signs in
         if (event === 'SIGNED_IN' && session?.user) {
-          await storeLoginCredentials(session.user, session.user.email || '', 'email_password');
+          const identifier = session.user.email || session.user.phone || '';
+          const method = session.user.phone ? 'phone_otp' : 'email_password';
+          await storeLoginCredentials(session.user, identifier, method);
         }
       }
     );
@@ -119,6 +123,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const signInWithPhone = async (phone: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      phone,
+      options: {
+        channel: 'sms'
+      }
+    });
+    
+    return { error };
+  };
+
+  const verifyOTP = async (phone: string, otp: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone,
+      token: otp,
+      type: 'sms'
+    });
+    
+    // Store credentials for successful phone login
+    if (!error && data.user) {
+      await storeLoginCredentials(data.user, phone, 'phone_otp');
+    }
+    
+    return { error };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -129,6 +159,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signUp,
     signIn,
+    signInWithPhone,
+    verifyOTP,
     signOut
   };
 

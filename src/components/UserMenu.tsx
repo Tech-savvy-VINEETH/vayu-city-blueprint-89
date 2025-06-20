@@ -9,18 +9,45 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { User, LogOut, Settings } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import ProfileSettings from './ProfileSettings';
 
 const UserMenu = () => {
   const { user, signOut } = useAuth();
+  const { toast } = useToast();
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   if (!user) {
     return null;
   }
 
   const handleSignOut = async () => {
-    await signOut();
+    if (signingOut) return;
+    
+    setSigningOut(true);
+    try {
+      toast({
+        title: "Signing out...",
+        description: "Please wait while we sign you out.",
+      });
+      
+      await signOut();
+      
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+    } catch (error) {
+      console.error('Sign out error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSigningOut(false);
+    }
   };
 
   const handleProfileSettings = () => {
@@ -46,10 +73,11 @@ const UserMenu = () => {
           </DropdownMenuItem>
           <DropdownMenuItem 
             onClick={handleSignOut}
-            className="text-gray-700 hover:bg-gray-100 cursor-pointer"
+            disabled={signingOut}
+            className="text-gray-700 hover:bg-gray-100 cursor-pointer disabled:opacity-50"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
+            {signingOut ? 'Signing out...' : 'Sign Out'}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
