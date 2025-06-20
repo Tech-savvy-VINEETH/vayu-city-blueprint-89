@@ -1,11 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Wind, Menu, X } from 'lucide-react';
+import { Wind, Menu, X, LogIn } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import UserMenu from '@/components/UserMenu';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,11 +55,26 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105">
-              Live AQI Map
-            </Button>
+          {/* Right side with CTA and Auth */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link to="/eco-routing">
+              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105">
+                Live AQI Map
+              </Button>
+            </Link>
+            
+            {!loading && (
+              user ? (
+                <UserMenu />
+              ) : (
+                <Link to="/auth">
+                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+              )
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,9 +102,24 @@ const Navigation = () => {
                   {item.name}
                 </a>
               ))}
-              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white w-full py-2 rounded-full font-medium mt-4">
-                Live AQI Map
-              </Button>
+              <Link to="/eco-routing">
+                <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white w-full py-2 rounded-full font-medium mt-4">
+                  Live AQI Map
+                </Button>
+              </Link>
+              
+              {!loading && (
+                user ? (
+                  <UserMenu />
+                ) : (
+                  <Link to="/auth">
+                    <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white w-full mt-2">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Button>
+                  </Link>
+                )
+              )}
             </div>
           </div>
         )}

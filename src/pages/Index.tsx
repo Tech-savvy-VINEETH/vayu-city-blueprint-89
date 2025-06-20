@@ -20,41 +20,19 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-vayu-dark to-vayu-dark-light">
-      {/* Navigation with Auth */}
-      <div className="fixed top-0 w-full z-50 bg-vayu-dark/80 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Navigation />
-            <div className="flex items-center gap-4">
-              {!loading && (
-                user ? (
-                  <UserMenu />
-                ) : (
-                  <Link to="/auth">
-                    <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Sign In
-                    </Button>
-                  </Link>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Navigation with integrated auth menu */}
+      <Navigation />
+      
       {/* Main Content */}
-      <div className="pt-16">
-        <HeroSection />
-        <VayuScoreSection />
-        <VayuPodTechnology />
-        <VayuGridExplainer />
-        <ImpactSection />
-        <PartnersSection />
-        <BlogSection />
-        <ContactSection />
-        <Footer />
-      </div>
+      <HeroSection />
+      <VayuScoreSection />
+      <VayuPodTechnology />
+      <VayuGridExplainer />
+      <ImpactSection />
+      <PartnersSection />
+      <BlogSection />
+      <ContactSection />
+      <Footer />
     </div>
   );
 };
