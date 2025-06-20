@@ -94,7 +94,7 @@ const VayuPodTechnology = () => {
                 {/* Air Flow Indicators - Polluted Air In (Left Side) */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center">
                   {/* Air particles */}
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-3 mb-3">
                     {Array.from({ length: 4 }).map((_, i) => (
                       <div 
                         key={`in-${i}`}
@@ -104,12 +104,10 @@ const VayuPodTechnology = () => {
                     ))}
                   </div>
                   
-                  {/* Polluted Air Label */}
-                  <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg border-2 border-red-400">
-                    <div className="text-center">
-                      <div>POLLUTED</div>
-                      <div>AIR</div>
-                    </div>
+                  {/* Polluted Air Text */}
+                  <div className="text-red-400 text-xs font-bold text-center">
+                    <div>POLLUTED</div>
+                    <div>AIR</div>
                   </div>
                 </div>
 
@@ -193,7 +191,7 @@ const VayuPodTechnology = () => {
                 {/* Air Flow Indicators - Pure Air Out (Right Side) */}
                 <div className="absolute right-0 top-1/3 flex flex-col items-center">
                   {/* Air particles */}
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-3 mb-3">
                     {Array.from({ length: 4 }).map((_, i) => (
                       <div 
                         key={`out-${i}`}
@@ -203,12 +201,10 @@ const VayuPodTechnology = () => {
                     ))}
                   </div>
                   
-                  {/* Pure Air Label */}
-                  <div className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg border-2 border-green-400">
-                    <div className="text-center">
-                      <div>PURE</div>
-                      <div>AIR</div>
-                    </div>
+                  {/* Pure Air Text */}
+                  <div className="text-green-400 text-xs font-bold text-center">
+                    <div>PURE</div>
+                    <div>AIR</div>
                   </div>
                 </div>
 
