@@ -23,7 +23,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
 }) => {
   return (
     <Card className="h-[600px] bg-white/10 backdrop-blur-sm border-white/20">
-      <CardHeader>
+      <CardHeader className="pb-4">
         <CardTitle className="text-white flex items-center gap-2">
           <MapPin className="h-5 w-5 text-vayu-mint" />
           India VayuPod Network
@@ -32,7 +32,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-full p-4">
+      <CardContent className="p-4 h-[calc(100%-80px)]">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center text-white">
@@ -56,7 +56,11 @@ const MapContainer: React.FC<MapContainerProps> = ({
             </div>
           </div>
         ) : (
-          <div ref={mapRef} className="w-full h-full rounded-lg" />
+          <div 
+            ref={mapRef} 
+            className="w-full h-full rounded-lg overflow-hidden bg-gray-200"
+            style={{ minHeight: '500px' }}
+          />
         )}
       </CardContent>
     </Card>

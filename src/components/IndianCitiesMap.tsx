@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { indianCitiesData } from './EcoRouting/constants';
@@ -49,6 +48,7 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
     if (!mapRef.current) return;
 
     try {
+      console.log('Initializing Google Maps...');
       const loader = new Loader({
         apiKey: GOOGLE_MAPS_API_KEY,
         version: 'weekly',
@@ -56,19 +56,36 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
       });
 
       await loader.load();
+      console.log('Google Maps API loaded successfully');
 
       const mapInstance = new window.google.maps.Map(mapRef.current, {
         center: INDIA_CENTER,
         zoom: 5,
         mapTypeId: 'roadmap',
-        styles: MAP_STYLES
+        styles: MAP_STYLES,
+        disableDefaultUI: false,
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: true
       });
 
+      console.log('Map instance created successfully');
       setMap(mapInstance);
       setMapError('');
+      setIsLoading(false);
+
+      // Add a small delay to ensure map is fully rendered
+      setTimeout(() => {
+        window.google.maps.event.trigger(mapInstance, 'resize');
+      }, 100);
+
     } catch (error) {
       console.error('Error loading Google Maps:', error);
       setMapError('Failed to load Google Maps. Please check your internet connection and try again.');
+      setIsLoading(false);
     }
   };
 
@@ -105,7 +122,9 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
       });
 
       setVayuPodCities(vayuPodConnectedCities);
-      setIsLoading(false);
+      if (!mapError) {
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error('Error loading VayuPod cities:', error);
       setIsLoading(false);
