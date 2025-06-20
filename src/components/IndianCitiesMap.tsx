@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,6 +38,7 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
   const [selectedState, setSelectedState] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [mapError, setMapError] = useState<string>('');
 
   // Get unique states from cities data
   const states = [...new Set(indianCitiesData.map(city => city.state))].sort();
@@ -98,8 +98,10 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
       });
 
       setMap(mapInstance);
+      setMapError('');
     } catch (error) {
       console.error('Error loading Google Maps:', error);
+      setMapError('Failed to load Google Maps. Please check your internet connection and try again.');
     }
   };
 
@@ -261,10 +263,9 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
           <div className="flex items-center">
             <Button 
               onClick={onBack}
-              variant="outline"
-              className="mr-4 border-white/20 text-white hover:bg-white/10"
+              className="mr-4 bg-white text-vayu-dark hover:bg-gray-100 border-2 border-white font-medium px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <ArrowLeft className="h-4 w-4" />
               Back to Home
             </Button>
             <div>
@@ -335,7 +336,12 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
           </Select>
 
           <Button
-            onClick={loadVayuPodCities}
+            onClick={() => {
+              loadVayuPodCities();
+              if (mapError) {
+                initializeMap();
+              }
+            }}
             disabled={isLoading}
             className="bg-vayu-mint hover:bg-vayu-mint-dark text-white"
           >
@@ -363,6 +369,20 @@ const IndianCitiesMap: React.FC<IndianCitiesMapProps> = ({ onBack }) => {
                       <Activity className="h-12 w-12 mx-auto mb-4 animate-pulse text-vayu-mint" />
                       <h3 className="text-xl font-bold mb-2">Loading VayuPod Network</h3>
                       <p className="text-gray-300">Fetching live data from Indian cities...</p>
+                    </div>
+                  </div>
+                ) : mapError ? (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <MapPin className="h-12 w-12 mx-auto mb-4 text-red-400" />
+                      <h3 className="text-xl font-bold mb-2 text-red-400">Map Loading Error</h3>
+                      <p className="text-gray-300 mb-4">{mapError}</p>
+                      <Button 
+                        onClick={initializeMap}
+                        className="bg-vayu-mint hover:bg-vayu-mint-dark text-white"
+                      >
+                        Retry Loading Map
+                      </Button>
                     </div>
                   </div>
                 ) : (
