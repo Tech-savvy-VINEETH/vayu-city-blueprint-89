@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Filter, Zap, Wifi, Gauge, Sun, ExternalLink } from 'lucide-react';
+import { Filter, Zap, Wifi, Gauge, Sun } from 'lucide-react';
+import TechSpecsModal from './TechSpecsModal';
 
 const VayuPodTechnology = () => {
   const techFeatures = [
@@ -255,10 +255,7 @@ const VayuPodTechnology = () => {
               ))}
 
               <div className="pt-6">
-                <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:scale-105 transition-all duration-200">
-                  <ExternalLink className="h-5 w-5" />
-                  View Tech Specs
-                </Button>
+                <TechSpecsModal />
               </div>
             </div>
           </div>
