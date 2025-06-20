@@ -66,17 +66,17 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Updated AeroSage Vayu brand colors to match new palette
+				// AeroSage Vayu brand colors
 				vayu: {
-					blue: '#4d648d',      // primary-200
-					'blue-light': '#acc2ef', // primary-300
-					'blue-dark': '#1F3A5F',  // primary-100
-					mint: '#3D5A80',      // accent-100 (replacing mint with accent blue)
-					'mint-light': '#cee8ff', // accent-200
-					'mint-dark': '#1F3A5F',  // primary-100
-					dark: '#0F1C2E',      // bg-100
-					'dark-light': '#1f2b3e', // bg-200
-					'dark-lighter': '#374357' // bg-300
+					blue: '#3b82f6',
+					'blue-light': '#93c5fd',
+					'blue-dark': '#1d4ed8',
+					mint: '#10b981',
+					'mint-light': '#6ee7b7',
+					'mint-dark': '#059669',
+					dark: '#0f172a',
+					'dark-light': '#1e293b',
+					'dark-lighter': '#334155'
 				}
 			},
 			borderRadius: {
@@ -121,10 +121,10 @@ export default {
 				},
 				'pulse-mint': {
 					'0%, 100%': {
-						boxShadow: '0 0 0 0 rgba(61, 90, 128, 0.4)'
+						boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.4)'
 					},
 					'50%': {
-						boxShadow: '0 0 0 10px rgba(61, 90, 128, 0)'
+						boxShadow: '0 0 0 10px rgba(16, 185, 129, 0)'
 					}
 				}
 			},

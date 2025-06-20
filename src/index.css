@@ -7,82 +7,82 @@
 
 @layer base {
   :root {
-    --background: 210 47% 98%;
-    --foreground: 210 60% 98%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 210 47% 98%;
-    --card-foreground: 210 60% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 210 47% 98%;
-    --popover-foreground: 210 60% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 65% 25%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 210 47.4% 11.2%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 206 59% 36%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 210 31.8% 80%;
-    --input: 210 31.8% 80%;
-    --ring: 206 59% 36%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 210 47% 10%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 206 59% 36%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 15%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 210 40% 15%;
-    --sidebar-ring: 206 59% 36%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 210 60% 9%;
-    --foreground: 0 0% 100%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 210 50% 12%;
-    --card-foreground: 0 0% 100%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 210 50% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 210 65% 25%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 210 40% 20%;
-    --secondary-foreground: 0 0% 88%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 20%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 206 59% 36%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 210 40% 20%;
-    --input: 210 40% 20%;
-    --ring: 206 59% 36%;
-    --sidebar-background: 210 60% 6%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 206 59% 36%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 210 40% 12%;
-    --sidebar-ring: 206 59% 36%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 94.1%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -96,18 +96,18 @@
   }
 }
 
-/* Custom gradient utilities updated for new color palette */
+/* Custom gradient utilities */
 @layer utilities {
   .gradient-vayu-primary {
-    background: linear-gradient(135deg, #3D5A80 0%, #1F3A5F 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   }
   
   .gradient-vayu-secondary {
-    background: linear-gradient(135deg, #4d648d 0%, #374357 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   }
   
   .gradient-vayu-hero {
-    background: linear-gradient(135deg, #0F1C2E 0%, #1f2b3e 50%, #374357 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   }
   
   .glass-effect {
@@ -117,7 +117,7 @@
   }
   
   .text-gradient-vayu {
-    background: linear-gradient(135deg, #3D5A80 0%, #acc2ef 100%);
+    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
