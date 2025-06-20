@@ -48,8 +48,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    // Use the correct Lovable project URL instead of localhost
-    const redirectUrl = `https://6c712804-285c-4078-834e-1d08aef03549.lovableproject.com/`;
+    // Use a more robust approach to get the correct URL
+    const currentOrigin = window.location.origin;
+    const redirectUrl = currentOrigin.includes('localhost') 
+      ? 'https://6c712804-285c-4078-834e-1d08aef03549.lovableproject.com/'
+      : `${currentOrigin}/`;
     
     const { error } = await supabase.auth.signUp({
       email,

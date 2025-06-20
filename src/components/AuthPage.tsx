@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Loader2, Mail, Lock, User, Wind } from 'lucide-react';
 
 const AuthPage = () => {
@@ -64,14 +64,6 @@ const AuthPage = () => {
         <Wind className="h-10 w-10 text-vayu-mint" />
         <span className="text-3xl font-bold text-white">AeroSage Vayu</span>
       </div>
-      
-      {/* Back to Home Link */}
-      <Link 
-        to="/" 
-        className="text-vayu-mint hover:text-vayu-mint-dark mb-4 underline"
-      >
-        ← Back to Home
-      </Link>
 
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader className="text-center">
