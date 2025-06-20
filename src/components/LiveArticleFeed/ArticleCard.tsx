@@ -16,6 +16,12 @@ const ArticleCard = ({ article, index }: ArticleCardProps) => {
   const sourceLabel = getSourceLabel(article.sourceType);
   const iconColor = getSourceIconColor(article.sourceType);
 
+  const handleReadMore = () => {
+    if (article.url) {
+      window.open(article.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <Card className="p-6 hover:shadow-lg transition-all duration-300 border-l-4 border-l-vayu-mint">
       <CardContent className="p-0">
@@ -45,21 +51,15 @@ const ArticleCard = ({ article, index }: ArticleCardProps) => {
         
         <div className="flex justify-between items-center">
           <span className="text-sm text-vayu-blue">Source: {article.source}</span>
-          {article.url ? (
-            <Button 
-              variant="ghost" 
-              className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium"
-              onClick={() => window.open(article.url, '_blank')}
-            >
-              Read Full Article
-              <ExternalLink className="h-4 w-4 ml-2" />
-            </Button>
-          ) : (
-            <Button variant="ghost" className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium">
-              Read More
-              <ExternalLink className="h-4 w-4 ml-2" />
-            </Button>
-          )}
+          <Button 
+            variant="ghost" 
+            className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium"
+            onClick={handleReadMore}
+            disabled={!article.url}
+          >
+            {article.url ? 'Read Full Article' : 'Read More'}
+            <ExternalLink className="h-4 w-4 ml-2" />
+          </Button>
         </div>
       </CardContent>
     </Card>

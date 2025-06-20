@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Award, ExternalLink } from 'lucide-react';
 import LiveArticleFeed from './LiveArticleFeed';
+import NewsletterSubscription from './LiveArticleFeed/NewsletterSubscription';
 
 const BlogSection = () => {
   const mediaMentions = [
@@ -94,24 +95,7 @@ const BlogSection = () => {
             </Card>
 
             {/* Newsletter Signup */}
-            <Card className="p-6 mt-6 bg-vayu-mint/5 border-vayu-mint/20">
-              <CardContent className="p-0">
-                <h4 className="text-xl font-bold text-vayu-dark mb-4">Stay Updated</h4>
-                <p className="text-vayu-blue-dark mb-4">
-                  Get the latest insights on clean air technology and smart cities.
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-vayu-mint"
-                  />
-                  <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6">
-                    Subscribe
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <NewsletterSubscription />
           </div>
         </div>
       </div>

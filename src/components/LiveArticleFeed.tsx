@@ -10,27 +10,47 @@ import ArticleCard from './LiveArticleFeed/ArticleCard';
 import LoadingState from './LiveArticleFeed/LoadingState';
 import ErrorState from './LiveArticleFeed/ErrorState';
 import SourceInfo from './LiveArticleFeed/SourceInfo';
+import ArticlePagination from './LiveArticleFeed/ArticlePagination';
+
+const ARTICLES_PER_PAGE = 6;
 
 const LiveArticleFeed = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [allArticles, setAllArticles] = useState<Article[]>([]);
+  const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchArticles();
   }, []);
+
+  useEffect(() => {
+    updateDisplayedArticles();
+  }, [allArticles, currentPage, showAll]);
+
+  const updateDisplayedArticles = () => {
+    if (showAll) {
+      const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+      const endIndex = startIndex + ARTICLES_PER_PAGE;
+      setDisplayedArticles(allArticles.slice(startIndex, endIndex));
+    } else {
+      setDisplayedArticles(allArticles.slice(0, 6));
+    }
+  };
 
   const fetchArticles = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const allArticles: Article[] = [];
+      const articles: Article[] = [];
 
       // 1. Fetch from News API
       try {
         const newsApiArticles = await fetchNewsAPI();
-        allArticles.push(...newsApiArticles);
+        articles.push(...newsApiArticles);
       } catch (err) {
         console.log('News API failed, continuing with other sources');
       }
@@ -38,29 +58,40 @@ const LiveArticleFeed = () => {
       // 2. Fetch from RSS feeds
       try {
         const rssArticles = await fetchRSSFeeds();
-        allArticles.push(...rssArticles);
+        articles.push(...rssArticles);
       } catch (err) {
         console.log('RSS feeds failed, continuing with other sources');
       }
 
       // 3. Add environmental data articles
       const environmentalArticles = getEnvironmentalArticles();
-      allArticles.push(...environmentalArticles);
+      articles.push(...environmentalArticles);
 
-      // Sort by date and limit to 6 articles
-      const sortedArticles = allArticles
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 6);
+      // Sort by date and store all articles
+      const sortedArticles = articles
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-      setArticles(sortedArticles);
+      setAllArticles(sortedArticles);
     } catch (err) {
       console.error('Error fetching articles:', err);
       setError('Failed to fetch some articles. Showing available content.');
-      setArticles(getFallbackArticles());
+      setAllArticles(getFallbackArticles());
     } finally {
       setLoading(false);
     }
   };
+
+  const handleViewAllArticles = () => {
+    setShowAll(true);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const totalPages = Math.ceil(allArticles.length / ARTICLES_PER_PAGE);
 
   return (
     <div className="space-y-6">
@@ -84,16 +115,45 @@ const LiveArticleFeed = () => {
       {loading && <LoadingState />}
 
       <div className="space-y-6">
-        {articles.map((article, index) => (
-          <ArticleCard key={index} article={article} index={index} />
+        {displayedArticles.map((article, index) => (
+          <ArticleCard key={`${article.title}-${index}`} article={article} index={index} />
         ))}
       </div>
 
-      <div className="mt-8 text-center">
-        <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-8 py-3 rounded-full">
-          View All Articles
-        </Button>
-      </div>
+      {showAll && totalPages > 1 && (
+        <ArticlePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={loading}
+        />
+      )}
+
+      {!showAll && allArticles.length > 6 && (
+        <div className="mt-8 text-center">
+          <Button 
+            onClick={handleViewAllArticles}
+            className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-8 py-3 rounded-full"
+          >
+            View All Articles ({allArticles.length})
+          </Button>
+        </div>
+      )}
+
+      {showAll && (
+        <div className="mt-8 text-center">
+          <Button 
+            onClick={() => {
+              setShowAll(false);
+              setCurrentPage(1);
+            }}
+            variant="outline"
+            className="px-8 py-3 rounded-full"
+          >
+            Show Less
+          </Button>
+        </div>
+      )}
 
       <SourceInfo />
     </div>
