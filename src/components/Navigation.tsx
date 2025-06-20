@@ -43,22 +43,22 @@ const Navigation = () => {
           </div>
 
           {/* Desktop Navigation - Reduced spacing for better fit */}
-          <div className="hidden md:flex items-center space-x-3 lg:space-x-5 ml-6 lg:ml-8">
+          <div className="hidden lg:flex items-center space-x-3 xl:space-x-5 ml-6 xl:ml-8">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium text-sm lg:text-base px-1 py-1"
+                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium text-sm xl:text-base px-1 py-1"
               >
                 {item.name}
               </a>
             ))}
           </div>
 
-          {/* Right side with CTA and Auth */}
-          <div className="hidden md:flex items-center space-x-3 lg:space-x-4 flex-shrink-0">
+          {/* Right side with CTA and Auth - Stacked layout for better visibility */}
+          <div className="hidden md:flex flex-col lg:flex-row items-center gap-2 lg:gap-3 xl:gap-4 flex-shrink-0">
             <Link to="/eco-routing">
-              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-4 lg:px-6 py-2 rounded-full font-medium transition-all duration-200 hover:scale-105 text-sm lg:text-base">
+              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-3 lg:px-4 xl:px-6 py-1.5 lg:py-2 rounded-full font-medium transition-all duration-200 hover:scale-105 text-xs lg:text-sm xl:text-base">
                 Live AQI Map
               </Button>
             </Link>
@@ -68,8 +68,8 @@ const Navigation = () => {
                 <UserMenu />
               ) : (
                 <Link to="/auth">
-                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white text-sm lg:text-base">
-                    <LogIn className="h-4 w-4 mr-2" />
+                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white text-xs lg:text-sm xl:text-base px-3 lg:px-4 py-1.5 lg:py-2">
+                    <LogIn className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
                     Sign In
                   </Button>
                 </Link>

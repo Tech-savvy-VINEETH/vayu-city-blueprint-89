@@ -1,8 +1,8 @@
 
 import HeroSection from "@/components/HeroSection";
-import VayuScoreSection from "@/components/VayuScoreSection";
 import VayuPodTechnology from "@/components/VayuPodTechnology";
 import VayuGridExplainer from "@/components/VayuGridExplainer";
+import VayuScoreSection from "@/components/VayuScoreSection";
 import ImpactSection from "@/components/ImpactSection";
 import PartnersSection from "@/components/PartnersSection";
 import BlogSection from "@/components/BlogSection";
@@ -10,10 +10,6 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import UserMenu from "@/components/UserMenu";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { LogIn } from "lucide-react";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -23,11 +19,11 @@ const Index = () => {
       {/* Navigation with integrated auth menu */}
       <Navigation />
       
-      {/* Main Content */}
+      {/* Main Content - Restored original order */}
       <HeroSection />
-      <VayuScoreSection />
       <VayuPodTechnology />
       <VayuGridExplainer />
+      <VayuScoreSection />
       <ImpactSection />
       <PartnersSection />
       <BlogSection />
