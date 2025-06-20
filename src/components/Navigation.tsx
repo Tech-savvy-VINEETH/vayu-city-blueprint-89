@@ -42,13 +42,13 @@ const Navigation = () => {
             <span className="text-lg md:text-xl font-bold text-vayu-dark whitespace-nowrap">AeroSage Vayu</span>
           </div>
 
-          {/* Desktop Navigation - Added more padding and margin */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-8 lg:ml-12">
+          {/* Desktop Navigation - Reduced spacing for better fit */}
+          <div className="hidden md:flex items-center space-x-3 lg:space-x-5 ml-6 lg:ml-8">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium text-sm lg:text-base px-2 py-1"
+                className="text-vayu-dark hover:text-vayu-mint transition-colors duration-200 font-medium text-sm lg:text-base px-1 py-1"
               >
                 {item.name}
               </a>
