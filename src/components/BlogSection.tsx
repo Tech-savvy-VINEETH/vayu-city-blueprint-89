@@ -144,7 +144,7 @@ const BlogSection = () => {
                   Download our complete press kit including high-resolution images, company facts, and founder bios.
                 </p>
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-vayu-blue">
+                  <Button variant="outline" className="w-full border-white bg-white text-vayu-blue hover:bg-gray-100 hover:text-vayu-blue">
                     Download Press Kit
                   </Button>
                   <Button variant="ghost" className="w-full text-white hover:text-vayu-mint">

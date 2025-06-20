@@ -36,7 +36,7 @@ const HeroSection = () => {
               View Live City Zones
             </Button>
             
-            <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-vayu-dark px-8 py-3 rounded-full text-lg font-medium hover:scale-105 transition-all duration-200 flex items-center gap-2">
+            <Button variant="outline" className="border-2 border-white bg-white text-vayu-dark hover:bg-gray-100 hover:text-vayu-dark px-8 py-3 rounded-full text-lg font-medium hover:scale-105 transition-all duration-200 flex items-center gap-2">
               <Download className="h-5 w-5" />
               Download Investor Deck
             </Button>

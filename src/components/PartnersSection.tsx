@@ -139,7 +139,7 @@ const PartnersSection = () => {
                   <span>Public health impact reports</span>
                 </div>
               </div>
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-vayu-blue">
+              <Button variant="outline" className="border-white bg-white text-vayu-blue hover:bg-gray-100 hover:text-vayu-blue">
                 Government Partnership
               </Button>
             </CardContent>
@@ -165,7 +165,7 @@ const PartnersSection = () => {
                   <span>Sustainability reporting</span>
                 </div>
               </div>
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-vayu-mint">
+              <Button variant="outline" className="border-white bg-white text-vayu-mint hover:bg-gray-100 hover:text-vayu-mint">
                 Corporate Partnership
               </Button>
             </CardContent>
