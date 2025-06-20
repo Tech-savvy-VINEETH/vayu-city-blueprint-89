@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,7 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
   const [travelMode, setTravelMode] = useState('car');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,17 +32,28 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
     }
   };
 
+  // Popular Delhi NCR locations for autocomplete
   const popularLocations = [
-    'Connaught Place, Delhi',
+    'Connaught Place, New Delhi',
+    'India Gate, New Delhi',
+    'Red Fort, New Delhi',
+    'Qutub Minar, New Delhi',
+    'Lotus Temple, New Delhi',
     'Cyber Hub, Gurgaon',
-    'Aerocity, Delhi',
-    'India Gate, Delhi',
     'DLF Phase 1, Gurgaon',
-    'Nehru Place, Delhi',
-    'Khan Market, Delhi',
-    'Karol Bagh, Delhi',
     'Sector 29, Gurgaon',
-    'Rajouri Garden, Delhi'
+    'Kingdom of Dreams, Gurgaon',
+    'Ambience Mall, Gurgaon',
+    'Aerocity, New Delhi',
+    'Nehru Place, New Delhi',
+    'Khan Market, New Delhi',
+    'Karol Bagh, New Delhi',
+    'Rajouri Garden, New Delhi',
+    'Dwarka Sector 21, New Delhi',
+    'Janakpuri, New Delhi',
+    'Lajpat Nagar, New Delhi',
+    'Greater Kailash, New Delhi',
+    'Saket, New Delhi'
   ];
 
   return (
@@ -62,7 +74,7 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
             <div className="flex gap-2">
               <Input
                 type="text"
-                placeholder="Enter starting location..."
+                placeholder="Enter starting location (e.g., Connaught Place, Delhi)..."
                 value={startLocation}
                 onChange={(e) => setStartLocation(e.target.value)}
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 flex-1"
@@ -75,6 +87,7 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
                   size="sm"
                   className="bg-vayu-mint/20 hover:bg-vayu-mint/30 text-vayu-mint border-vayu-mint/40 shrink-0"
                   variant="outline"
+                  title="Use current location"
                 >
                   <Navigation className="h-4 w-4" />
                 </Button>
@@ -94,7 +107,7 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
             </label>
             <Input
               type="text"
-              placeholder="Enter destination..."
+              placeholder="Enter destination (e.g., India Gate, Delhi)..."
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
               className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
@@ -148,22 +161,22 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Finding Clean Routes...
+                Calculating with Live Data...
               </>
             ) : (
-              'Find Eco Routes'
+              'Find Eco Routes with Live AQI'
             )}
           </Button>
         </form>
 
-        {/* Quick Tips */}
+        {/* Enhanced Tips */}
         <div className="mt-6 p-4 bg-vayu-mint/10 rounded-lg">
-          <h4 className="text-sm font-medium text-vayu-mint mb-2">💡 Smart Route Tips</h4>
+          <h4 className="text-sm font-medium text-vayu-mint mb-2">🌱 Live Route Intelligence</h4>
           <ul className="text-xs text-gray-300 space-y-1">
-            <li>• Travel during VayuPod active hours (6 AM - 10 PM)</li>
-            <li>• Avoid peak pollution times (8-10 AM, 6-8 PM)</li>
-            <li>• Consider slightly longer routes for cleaner air</li>
-            <li>• Check real-time AQI before starting your journey</li>
+            <li>• Real-time Google Maps traffic integration</li>
+            <li>• Live AQI data from pollution monitoring stations</li>
+            <li>• Dynamic VayuScore calculation for clean routes</li>
+            <li>• Pollution exposure minimization recommendations</li>
           </ul>
         </div>
 
@@ -172,7 +185,7 @@ const RouteInputForm: React.FC<RouteInputFormProps> = ({ onSearch, isLoading, us
           <div className="mt-4 p-3 bg-blue-500/10 rounded-lg">
             <div className="flex items-center gap-2 text-blue-400 text-sm">
               <Navigation className="h-4 w-4" />
-              <span className="font-medium">Your Location Detected</span>
+              <span className="font-medium">Location Detected</span>
             </div>
             <p className="text-xs text-gray-300 mt-1">{userLocation.address}</p>
           </div>
