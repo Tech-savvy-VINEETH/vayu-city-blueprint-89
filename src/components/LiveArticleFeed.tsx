@@ -13,6 +13,7 @@ import SourceInfo from './LiveArticleFeed/SourceInfo';
 import ArticlePagination from './LiveArticleFeed/ArticlePagination';
 
 const ARTICLES_PER_PAGE = 6;
+const INITIAL_ARTICLES_DISPLAY = 3; // Show only 3 articles initially
 
 const LiveArticleFeed = () => {
   const [allArticles, setAllArticles] = useState<Article[]>([]);
@@ -36,7 +37,7 @@ const LiveArticleFeed = () => {
       const endIndex = startIndex + ARTICLES_PER_PAGE;
       setDisplayedArticles(allArticles.slice(startIndex, endIndex));
     } else {
-      setDisplayedArticles(allArticles.slice(0, 6));
+      setDisplayedArticles(allArticles.slice(0, INITIAL_ARTICLES_DISPLAY));
     }
   };
 
@@ -129,7 +130,7 @@ const LiveArticleFeed = () => {
         />
       )}
 
-      {!showAll && allArticles.length > 6 && (
+      {!showAll && allArticles.length > INITIAL_ARTICLES_DISPLAY && (
         <div className="mt-8 text-center">
           <Button 
             onClick={handleViewAllArticles}
