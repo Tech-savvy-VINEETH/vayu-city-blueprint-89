@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Download, Map } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
@@ -31,10 +32,12 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-8 py-3 rounded-full text-lg font-medium hover:scale-105 transition-all duration-200 flex items-center gap-2">
-              <Map className="h-5 w-5" />
-              View Live City Zones
-            </Button>
+            <Link to="/eco-routing">
+              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-8 py-3 rounded-full text-lg font-medium hover:scale-105 transition-all duration-200 flex items-center gap-2">
+                <Map className="h-5 w-5" />
+                View Live City Zones
+              </Button>
+            </Link>
             
             <Button variant="outline" className="border-2 border-white bg-white text-vayu-dark hover:bg-gray-100 hover:text-vayu-dark px-8 py-3 rounded-full text-lg font-medium hover:scale-105 transition-all duration-200 flex items-center gap-2">
               <Download className="h-5 w-5" />
