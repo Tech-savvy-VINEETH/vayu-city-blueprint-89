@@ -26,18 +26,31 @@ const UserMenu = () => {
     if (signingOut) return;
     
     setSigningOut(true);
+    
     try {
+      // Optimistic UI - show success message immediately
       toast({
         title: "Signing out...",
-        description: "Please wait while we sign you out.",
+        description: "You are being signed out.",
       });
       
-      await signOut();
-      
-      toast({
-        title: "Signed out successfully",
-        description: "You have been signed out of your account.",
+      // Sign out without awaiting to make it feel faster
+      signOut().then(() => {
+        toast({
+          title: "Signed out successfully",
+          description: "You have been signed out of your account.",
+        });
+      }).catch((error) => {
+        console.error('Sign out error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to sign out. Please try again.",
+          variant: "destructive",
+        });
+      }).finally(() => {
+        setSigningOut(false);
       });
+      
     } catch (error) {
       console.error('Sign out error:', error);
       toast({
@@ -45,7 +58,6 @@ const UserMenu = () => {
         description: "Failed to sign out. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setSigningOut(false);
     }
   };
