@@ -24,19 +24,19 @@ const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-white hover:bg-white/10">
+        <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white">
           <User className="h-4 w-4 mr-2" />
           {user.email}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white/10 backdrop-blur-sm border-white/20">
-        <DropdownMenuItem className="text-white hover:bg-white/10">
+      <DropdownMenuContent className="w-56 bg-white border border-gray-200 z-50">
+        <DropdownMenuItem className="text-gray-700 hover:bg-gray-100 cursor-pointer">
           <Settings className="h-4 w-4 mr-2" />
           Profile Settings
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={handleSignOut}
-          className="text-white hover:bg-white/10"
+          className="text-gray-700 hover:bg-gray-100 cursor-pointer"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Sign Out

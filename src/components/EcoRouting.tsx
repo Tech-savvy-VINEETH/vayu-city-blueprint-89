@@ -253,7 +253,7 @@ const EcoRouting = () => {
                   <Link to="/auth">
                     <Button 
                       variant="default" 
-                      className="bg-vayu-mint hover:bg-vayu-mint-dark text-white border-0 font-medium"
+                      className="bg-white text-vayu-dark hover:bg-gray-100 hover:text-vayu-dark border-0 font-medium"
                     >
                       <LogIn className="h-4 w-4 mr-2" />
                       Sign In
@@ -289,7 +289,7 @@ const EcoRouting = () => {
             <Button 
               onClick={getCurrentLocation}
               disabled={isGettingLocation}
-              className="bg-white text-vayu-dark hover:bg-gray-100 px-6 py-3 w-full sm:w-auto border-0 font-medium"
+              className="bg-white text-vayu-dark hover:bg-gray-100 hover:text-vayu-dark px-6 py-3 w-full sm:w-auto border-0 font-medium"
             >
               {isGettingLocation ? (
                 <Loader2 className="h-5 w-5 mr-2 animate-spin" />

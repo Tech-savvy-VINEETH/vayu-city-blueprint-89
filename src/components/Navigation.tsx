@@ -68,7 +68,7 @@ const Navigation = () => {
                 <UserMenu />
               ) : (
                 <Link to="/auth">
-                  <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white text-xs lg:text-sm xl:text-base px-3 lg:px-4 py-1.5 lg:py-2">
+                  <Button variant="outline" className="border-vayu-mint text-vayu-dark bg-white hover:bg-vayu-mint hover:text-white text-xs lg:text-sm xl:text-base px-3 lg:px-4 py-1.5 lg:py-2">
                     <LogIn className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
                     Sign In
                   </Button>
@@ -113,7 +113,7 @@ const Navigation = () => {
                   <UserMenu />
                 ) : (
                   <Link to="/auth">
-                    <Button variant="outline" className="border-vayu-mint text-vayu-mint hover:bg-vayu-mint hover:text-white w-full mt-2">
+                    <Button variant="outline" className="border-vayu-mint text-vayu-dark bg-white hover:bg-vayu-mint hover:text-white w-full mt-2">
                       <LogIn className="h-4 w-4 mr-2" />
                       Sign In
                     </Button>
