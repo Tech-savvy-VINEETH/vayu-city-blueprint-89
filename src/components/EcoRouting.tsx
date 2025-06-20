@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,10 @@ import RouteResults from './RouteResults';
 import GoogleMapsRoute from './GoogleMapsRoute';
 import LiveAQIMap from './LiveAQIMap';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import UserMenu from './UserMenu';
+import { Link } from 'react-router-dom';
+import { LogIn } from 'lucide-react';
 
 export interface RouteData {
   id: string;
@@ -41,6 +44,7 @@ const EcoRouting = () => {
   const [endLocation, setEndLocation] = useState('');
   const [travelMode, setTravelMode] = useState('car');
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
 
   // Get user's current location
   useEffect(() => {
@@ -141,7 +145,32 @@ const EcoRouting = () => {
 
   return (
     <section className="py-8 md:py-20 bg-gradient-to-br from-vayu-dark to-vayu-dark-light min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Auth Header */}
+      <div className="fixed top-0 w-full z-50 bg-vayu-dark/80 backdrop-blur-sm border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="text-xl font-bold text-white">
+              AeroSage Vayu
+            </Link>
+            <div className="flex items-center gap-4">
+              {!authLoading && (
+                user ? (
+                  <UserMenu />
+                ) : (
+                  <Link to="/auth">
+                    <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Button>
+                  </Link>
+                )
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">
