@@ -263,72 +263,58 @@ Our team will contact you within 24 hours. Is there anything else I can help you
 
           <Card className="p-6 border-l-4 border-l-vayu-blue">
             <CardContent className="p-0">
-              <div className="mb-6">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="p-3 bg-vayu-blue/10 rounded-lg">
-                    <User className="h-6 w-6 text-vayu-blue" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-vayu-dark mb-2">Human Support</h4>
-                    <p className="text-vayu-blue-dark">hello@aerosagevayu.com</p>
-                    <p className="text-vayu-blue-dark">partnerships@aerosagevayu.com</p>
-                    <p className="text-vayu-blue-dark">Mon-Fri 9AM-6PM IST</p>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4">
-                  <h5 className="text-md font-semibold text-vayu-dark mb-4 flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    Send us a Message
-                  </h5>
-                  <form onSubmit={handleContactSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input
-                        type="text"
-                        placeholder="Name"
-                        value={contactFormData.name}
-                        onChange={(e) => setContactFormData({...contactFormData, name: e.target.value})}
-                        className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue"
-                        required
-                      />
-                      <Input
-                        type="email"
-                        placeholder="Email"
-                        value={contactFormData.email}
-                        onChange={(e) => setContactFormData({...contactFormData, email: e.target.value})}
-                        className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue"
-                        required
-                      />
-                    </div>
-
-                    <Select onValueChange={(value) => setContactFormData({...contactFormData, queryType: value})}>
-                      <SelectTrigger className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue">
-                        <SelectValue placeholder="Query Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {queryTypes.map((type) => (
-                          <SelectItem key={type} value={type}>{type}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Textarea
-                      value={contactFormData.message}
-                      onChange={(e) => setContactFormData({...contactFormData, message: e.target.value})}
-                      rows={3}
+              <div>
+                <h5 className="text-lg font-bold text-vayu-dark mb-4 flex items-center gap-2">
+                  <Mail className="h-5 w-5" />
+                  Send us a Message
+                </h5>
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      type="text"
+                      placeholder="Name"
+                      value={contactFormData.name}
+                      onChange={(e) => setContactFormData({...contactFormData, name: e.target.value})}
                       className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue"
-                      placeholder="Your message..."
                       required
                     />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={contactFormData.email}
+                      onChange={(e) => setContactFormData({...contactFormData, email: e.target.value})}
+                      className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue"
+                      required
+                    />
+                  </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-vayu-blue hover:bg-vayu-blue-dark text-white py-2 text-sm font-medium"
-                    >
-                      Send Message
-                    </Button>
-                  </form>
-                </div>
+                  <Select onValueChange={(value) => setContactFormData({...contactFormData, queryType: value})}>
+                    <SelectTrigger className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue">
+                      <SelectValue placeholder="Query Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {queryTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Textarea
+                    value={contactFormData.message}
+                    onChange={(e) => setContactFormData({...contactFormData, message: e.target.value})}
+                    rows={3}
+                    className="text-sm border-gray-300 focus:border-vayu-blue focus:ring-vayu-blue"
+                    placeholder="Your message..."
+                    required
+                  />
+
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-vayu-blue hover:bg-vayu-blue-dark text-white py-2 text-sm font-medium"
+                  >
+                    Send Message
+                  </Button>
+                </form>
               </div>
             </CardContent>
           </Card>
