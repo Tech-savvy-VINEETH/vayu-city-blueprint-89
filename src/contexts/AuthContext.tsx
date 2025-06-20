@@ -22,6 +22,33 @@ export const useAuth = () => {
   return context;
 };
 
+// Function to store login credentials
+const storeLoginCredentials = async (user: User, email: string, loginMethod: string = 'email_password') => {
+  try {
+    // Get user's IP and user agent
+    const userAgent = navigator.userAgent;
+    
+    // Store credentials in the database
+    const { error } = await supabase
+      .from('user_credentials')
+      .insert({
+        user_id: user.id,
+        email: email,
+        login_timestamp: new Date().toISOString(),
+        user_agent: userAgent,
+        login_method: loginMethod
+      });
+
+    if (error) {
+      console.error('Error storing login credentials:', error);
+    } else {
+      console.log('Login credentials stored successfully');
+    }
+  } catch (error) {
+    console.error('Error in storeLoginCredentials:', error);
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -30,10 +57,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Store credentials when user signs in
+        if (event === 'SIGNED_IN' && session?.user) {
+          await storeLoginCredentials(session.user, session.user.email || '', 'email_password');
+        }
       }
     );
 
@@ -54,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ? 'https://6c712804-285c-4078-834e-1d08aef03549.lovableproject.com/'
       : `${currentOrigin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -65,14 +97,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
     
+    // Store credentials for successful sign up
+    if (!error && data.user) {
+      await storeLoginCredentials(data.user, email, 'email_signup');
+    }
+    
     return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password
     });
+    
+    // Store credentials for successful sign in
+    if (!error && data.user) {
+      await storeLoginCredentials(data.user, email, 'email_password');
+    }
     
     return { error };
   };
