@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Navigate } from 'react-router-dom';
-import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { Navigate, Link } from 'react-router-dom';
+import { Loader2, Mail, Lock, User, Wind } from 'lucide-react';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -58,7 +58,21 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-vayu-dark to-vayu-dark-light flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-vayu-dark to-vayu-dark-light flex flex-col items-center justify-center p-4">
+      {/* Logo Header */}
+      <div className="flex items-center space-x-2 mb-8">
+        <Wind className="h-10 w-10 text-vayu-mint" />
+        <span className="text-3xl font-bold text-white">AeroSage Vayu</span>
+      </div>
+      
+      {/* Back to Home Link */}
+      <Link 
+        to="/" 
+        className="text-vayu-mint hover:text-vayu-mint-dark mb-4 underline"
+      >
+        ← Back to Home
+      </Link>
+
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white">
