@@ -2,33 +2,10 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, ExternalLink, Award } from 'lucide-react';
+import { Award, ExternalLink } from 'lucide-react';
+import LiveArticleFeed from './LiveArticleFeed';
 
 const BlogSection = () => {
-  const featuredArticles = [
-    {
-      title: "AQI as the New Stock Index: Why Cities Should Trade Clean Air",
-      excerpt: "Exploring how air quality indices could become tradeable commodities, incentivizing cities to compete for cleaner air.",
-      date: "Dec 15, 2024",
-      readTime: "5 min read",
-      category: "Innovation"
-    },
-    {
-      title: "Inside AeroBrain: The AI Behind Pollution Prediction",
-      excerpt: "Deep dive into our machine learning models that predict air pollution patterns 48 hours in advance with 94% accuracy.",
-      date: "Dec 10, 2024",
-      readTime: "8 min read",
-      category: "Technology"
-    },
-    {
-      title: "From Delhi to Bangalore: VayuGrid's Pan-India Expansion",
-      excerpt: "How we're scaling our pollution-neutral corridor technology across India's major metropolitan cities.",
-      date: "Dec 5, 2024",
-      readTime: "6 min read",
-      category: "Growth"
-    }
-  ];
-
   const mediaMentions = [
     {
       outlet: "YourStory",
@@ -60,52 +37,14 @@ const BlogSection = () => {
             Insights & <span className="text-gradient-vayu">Media</span>
           </h2>
           <p className="text-xl text-vayu-blue-dark max-w-3xl mx-auto">
-            Latest thoughts on clean air technology, urban sustainability, and the future of smart cities.
+            Latest thoughts on clean air technology, urban sustainability, and real-time environmental news.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Featured Articles */}
+          {/* Live Articles Feed */}
           <div>
-            <h3 className="text-2xl font-bold text-vayu-dark mb-8 flex items-center gap-2">
-              <Calendar className="h-6 w-6 text-vayu-mint" />
-              Featured Articles
-            </h3>
-            
-            <div className="space-y-6">
-              {featuredArticles.map((article, index) => (
-                <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 border-l-4 border-l-vayu-mint">
-                  <CardContent className="p-0">
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="bg-vayu-mint/10 text-vayu-mint px-3 py-1 rounded-full text-sm font-medium">
-                        {article.category}
-                      </span>
-                      <div className="text-sm text-vayu-blue flex items-center gap-4">
-                        <span>{article.date}</span>
-                        <span>{article.readTime}</span>
-                      </div>
-                    </div>
-                    
-                    <h4 className="text-xl font-bold text-vayu-dark mb-3 hover:text-vayu-mint transition-colors cursor-pointer">
-                      {article.title}
-                    </h4>
-                    
-                    <p className="text-vayu-blue-dark mb-4">{article.excerpt}</p>
-                    
-                    <Button variant="ghost" className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium">
-                      Read Full Article
-                      <ExternalLink className="h-4 w-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="mt-8 text-center">
-              <Button className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-8 py-3 rounded-full">
-                View All Articles
-              </Button>
-            </div>
+            <LiveArticleFeed />
           </div>
 
           {/* Media Mentions */}
