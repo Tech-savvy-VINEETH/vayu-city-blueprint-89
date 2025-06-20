@@ -30,58 +30,61 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-vayu-dark/80 backdrop-blur-sm border-b border-white/10">
+    <nav className="fixed top-0 w-full z-50 bg-vayu-dark/90 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
             <Wind className="h-8 w-8 text-vayu-mint" />
-            <span className="text-xl font-bold text-white">AeroSage Vayu</span>
-          </div>
+            <span className="text-xl font-bold text-white whitespace-nowrap">AeroSage Vayu</span>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
             {navItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium"
+                className="text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-3 py-2 rounded-md hover:bg-white/5"
               >
                 {item.name}
               </button>
             ))}
           </div>
 
-          {/* Auth Section */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Desktop Auth Section */}
+          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
             <Link 
               to="/eco-routing"
-              className="text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium"
+              className="text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium px-3 py-2 rounded-md hover:bg-white/5"
             >
               Eco Routing
             </Link>
             {!authLoading && (
-              user ? (
-                <UserMenu />
-              ) : (
-                <Link to="/auth">
-                  <Button 
-                    variant="default" 
-                    className="bg-vayu-mint text-white hover:bg-vayu-mint-dark border-0 font-medium"
-                  >
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Sign In
-                  </Button>
-                </Link>
-              )
+              <div className="flex items-center">
+                {user ? (
+                  <UserMenu />
+                ) : (
+                  <Link to="/auth">
+                    <Button 
+                      variant="default" 
+                      className="bg-vayu-mint text-white hover:bg-vayu-mint-dark border-0 font-medium transition-all duration-200"
+                    >
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Button>
+                  </Link>
+                )}
+              </div>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex-shrink-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white p-2"
+              className="text-white p-2 rounded-md hover:bg-white/10 transition-colors duration-200"
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -90,39 +93,45 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 bg-vayu-dark/95 backdrop-blur-sm">
-            <div className="flex flex-col space-y-4">
+          <div className="lg:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-vayu-dark/95 backdrop-blur-md border-t border-white/10">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-left text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-4 py-2"
+                  className="block w-full text-left text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-3 py-2 rounded-md hover:bg-white/5"
                 >
                   {item.name}
                 </button>
               ))}
-              <div className="border-t border-white/10 pt-4 px-4">
+              
+              <div className="border-t border-white/10 pt-3 mt-3">
                 <Link 
                   to="/eco-routing"
-                  className="block text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium mb-4"
+                  className="block text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium px-3 py-2 rounded-md hover:bg-white/5 mb-3"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Eco Routing
                 </Link>
+                
                 {!authLoading && (
-                  user ? (
-                    <UserMenu />
-                  ) : (
-                    <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-                      <Button 
-                        variant="default" 
-                        className="w-full bg-vayu-mint text-white hover:bg-vayu-mint-dark border-0 font-medium"
-                      >
-                        <LogIn className="h-4 w-4 mr-2" />
-                        Sign In
-                      </Button>
-                    </Link>
-                  )
+                  <div className="px-3">
+                    {user ? (
+                      <div className="py-2">
+                        <UserMenu />
+                      </div>
+                    ) : (
+                      <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                        <Button 
+                          variant="default" 
+                          className="w-full bg-vayu-mint text-white hover:bg-vayu-mint-dark border-0 font-medium transition-all duration-200"
+                        >
+                          <LogIn className="h-4 w-4 mr-2" />
+                          Sign In
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

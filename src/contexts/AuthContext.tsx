@@ -24,27 +24,26 @@ export const useAuth = () => {
   return context;
 };
 
-// Function to store login credentials
+// Optimized function to store login credentials
 const storeLoginCredentials = async (user: User, identifier: string, loginMethod: string = 'email_password') => {
   try {
-    // Get user's user agent
     const userAgent = navigator.userAgent;
     
-    // Store credentials in the database
+    // Use upsert for better performance and handle conflicts
     const { error } = await supabase
       .from('user_credentials')
-      .insert({
+      .upsert({
         user_id: user.id,
         email: identifier,
         login_timestamp: new Date().toISOString(),
         user_agent: userAgent,
         login_method: loginMethod
+      }, {
+        onConflict: 'user_id'
       });
 
     if (error) {
       console.error('Error storing login credentials:', error);
-    } else {
-      console.log('Login credentials stored successfully');
     }
   } catch (error) {
     console.error('Error in storeLoginCredentials:', error);
@@ -57,104 +56,129 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return;
+
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Store credentials when user signs in
+        // Store credentials when user signs in (run in background)
         if (event === 'SIGNED_IN' && session?.user) {
           const identifier = session.user.email || session.user.phone || '';
           const method = session.user.phone ? 'phone_otp' : 'email_password';
-          await storeLoginCredentials(session.user, identifier, method);
+          
+          // Run in background without blocking UI
+          setTimeout(() => {
+            storeLoginCredentials(session.user, identifier, method);
+          }, 0);
         }
       }
     );
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
 
-    return () => subscription.unsubscribe();
+    getInitialSession();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    // Use a more robust approach to get the correct URL
-    const currentOrigin = window.location.origin;
-    const redirectUrl = currentOrigin.includes('localhost') 
-      ? 'https://6c712804-285c-4078-834e-1d08aef03549.lovableproject.com/'
-      : `${currentOrigin}/`;
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName || ''
+    try {
+      const currentOrigin = window.location.origin;
+      const redirectUrl = currentOrigin.includes('localhost') 
+        ? 'https://6c712804-285c-4078-834e-1d08aef03549.lovableproject.com/'
+        : `${currentOrigin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: fullName || ''
+          }
         }
-      }
-    });
-    
-    // Store credentials for successful sign up
-    if (!error && data.user) {
-      await storeLoginCredentials(data.user, email, 'email_signup');
+      });
+      
+      return { error };
+    } catch (error) {
+      return { error };
     }
-    
-    return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-    
-    // Store credentials for successful sign in
-    if (!error && data.user) {
-      await storeLoginCredentials(data.user, email, 'email_password');
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      return { error };
+    } catch (error) {
+      return { error };
     }
-    
-    return { error };
   };
 
   const signInWithPhone = async (phone: string) => {
-    // Optimized for faster response - don't wait for full processing
-    const { error } = await supabase.auth.signInWithOtp({
-      phone,
-      options: {
-        channel: 'sms'
-      }
-    });
-    
-    return { error };
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone,
+        options: {
+          channel: 'sms'
+        }
+      });
+      
+      return { error };
+    } catch (error) {
+      return { error };
+    }
   };
 
   const verifyOTP = async (phone: string, otp: string) => {
-    const { data, error } = await supabase.auth.verifyOtp({
-      phone,
-      token: otp,
-      type: 'sms'
-    });
-    
-    // Store credentials for successful phone login
-    if (!error && data.user) {
-      // Run in background for faster response
-      setTimeout(() => {
-        storeLoginCredentials(data.user, phone, 'phone_otp');
-      }, 0);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        phone,
+        token: otp,
+        type: 'sms'
+      });
+      
+      return { error };
+    } catch (error) {
+      return { error };
     }
-    
-    return { error };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
   };
 
   const value = {
