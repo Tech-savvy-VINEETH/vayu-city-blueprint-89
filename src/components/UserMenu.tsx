@@ -60,10 +60,10 @@ const UserMenu = () => {
         <DropdownMenuTrigger asChild>
           <Button 
             variant="ghost" 
-            className="text-white hover:bg-white/10 hover:text-white flex items-center gap-2 px-3 py-2 h-auto min-w-0"
+            className="text-white hover:bg-white/10 hover:text-white flex items-center gap-2 px-3 py-2 h-auto min-w-0 bg-transparent border-white/20 border"
           >
             <User className="h-4 w-4 flex-shrink-0" />
-            <span className="truncate text-sm max-w-[120px]">{truncatedName}</span>
+            <span className="truncate text-sm max-w-[100px] hidden sm:inline">{truncatedName}</span>
             <ChevronDown className="h-3 w-3 flex-shrink-0" />
           </Button>
         </DropdownMenuTrigger>
@@ -72,7 +72,7 @@ const UserMenu = () => {
           align="end"
           sideOffset={5}
         >
-          <div className="px-2 py-1.5 text-sm text-gray-700 border-b">
+          <div className="px-3 py-2 text-sm text-gray-700 border-b">
             <div className="font-medium">Signed in as</div>
             <div className="text-xs text-gray-500 truncate">{displayName}</div>
           </div>
