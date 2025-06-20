@@ -36,40 +36,42 @@ const VayuPodTechnology = () => {
   return (
     <>
       <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.8; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.05); }
+        @keyframes airFlowIn {
+          0% { transform: translateX(-50px); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateX(0); opacity: 0; }
         }
-        @keyframes glow {
-          0%, 100% { box-shadow: 0 0 15px rgba(20, 184, 166, 0.6); }
-          50% { box-shadow: 0 0 25px rgba(20, 184, 166, 0.9); }
+        @keyframes airFlowOut {
+          0% { transform: translateY(0); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(-50px); opacity: 0; }
         }
         @keyframes solarPulse {
-          0%, 100% { opacity: 0.9; }
+          0%, 100% { opacity: 0.8; }
           50% { opacity: 1; }
         }
         @keyframes statusBlink {
           0%, 50% { opacity: 1; }
-          51%, 100% { opacity: 0.3; }
+          51%, 100% { opacity: 0.6; }
         }
-        .pulse-animation {
-          animation: pulse 2s infinite;
+        .air-flow-in {
+          animation: airFlowIn 3s infinite;
         }
-        .glow-animation {
-          animation: glow 3s infinite;
+        .air-flow-out {
+          animation: airFlowOut 3s infinite;
         }
         .solar-pulse {
-          animation: solarPulse 2.5s infinite;
+          animation: solarPulse 2s infinite;
         }
         .status-blink {
           animation: statusBlink 2s infinite;
         }
         .professional-shadow {
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
         .glass-effect {
           backdrop-filter: blur(20px);
-          background: rgba(17, 24, 39, 0.8);
+          background: rgba(17, 24, 39, 0.9);
         }
       `}</style>
       
@@ -85,20 +87,34 @@ const VayuPodTechnology = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Clear VayuPod Design */}
+            {/* VayuPod Design - Clean Professional Look */}
             <div className="relative flex justify-center">
-              <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-8 glass-effect professional-shadow">
+              <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-12 glass-effect professional-shadow">
                 
-                {/* VayuPod Structure - Clean Layout */}
-                <div className="w-64 h-96 mx-auto relative">
+                {/* Air Flow Indicators - Polluted Air In */}
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 space-y-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div 
+                      key={`in-${i}`}
+                      className="w-8 h-2 bg-red-400 rounded-full air-flow-in opacity-60"
+                      style={{ animationDelay: `${i * 0.6}s` }}
+                    />
+                  ))}
+                  <div className="text-red-400 text-xs font-medium mt-2 rotate-90 origin-center">
+                    Polluted Air
+                  </div>
+                </div>
+
+                {/* VayuPod Structure */}
+                <div className="w-80 h-[500px] mx-auto relative">
                   
                   {/* Solar Panel Top */}
-                  <div className="absolute top-0 left-6 right-6 h-12 bg-gradient-to-b from-slate-200 to-slate-300 rounded-t-2xl border border-slate-400 professional-shadow">
-                    <div className="grid grid-cols-8 grid-rows-2 gap-0.5 h-full p-2">
-                      {Array.from({ length: 16 }).map((_, i) => (
+                  <div className="absolute top-0 left-8 right-8 h-16 bg-gradient-to-b from-slate-300 to-slate-400 rounded-t-2xl border-2 border-slate-500 professional-shadow">
+                    <div className="grid grid-cols-8 grid-rows-3 gap-1 h-full p-3">
+                      {Array.from({ length: 24 }).map((_, i) => (
                         <div 
                           key={i} 
-                          className="bg-blue-900 rounded-sm solar-pulse border border-blue-800" 
+                          className="bg-blue-900 rounded solar-pulse" 
                           style={{ animationDelay: `${i * 0.1}s` }}
                         />
                       ))}
@@ -106,110 +122,102 @@ const VayuPodTechnology = () => {
                   </div>
 
                   {/* Main Housing */}
-                  <div className="absolute top-12 left-0 right-0 bottom-16 bg-gradient-to-b from-white to-gray-100 border-2 border-gray-300 professional-shadow">
+                  <div className="absolute top-16 left-0 right-0 bottom-20 bg-gradient-to-b from-gray-100 to-gray-200 rounded-2xl border-2 border-gray-400 professional-shadow">
                     
-                    {/* Top Status Section */}
-                    <div className="h-16 px-4 pt-3 border-b border-gray-200">
-                      <div className="text-center bg-gray-50 rounded-lg py-1 border border-gray-200">
-                        <div className="text-gray-800 text-xs font-bold">EDGE-AI ENABLED</div>
-                      </div>
+                    {/* Top Label */}
+                    <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-gray-700 text-white px-4 py-2 rounded-lg text-lg font-bold">
+                      Edge-AI + 5G
                     </div>
 
                     {/* Sensor Module - Right Side */}
-                    <div className="absolute top-20 right-2 w-20 h-12 bg-gray-100 rounded-lg border border-gray-300 professional-shadow">
-                      <div className="p-1 text-center">
-                        <div className="text-xs font-bold text-gray-700">SENSORS</div>
-                        <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1 status-blink"></div>
+                    <div className="absolute top-20 right-4 w-24 h-16 bg-gray-300 rounded-lg border-2 border-gray-400 professional-shadow">
+                      <div className="p-2 text-center">
+                        <div className="text-sm font-bold text-gray-700 mb-1">SENSORS</div>
+                        <div className="w-3 h-3 bg-green-400 rounded-full mx-auto status-blink border border-green-600"></div>
                       </div>
                     </div>
 
-                    {/* Main Filter Section */}
-                    <div className="absolute top-20 left-4 right-24 bottom-4 bg-gradient-to-b from-teal-400 to-teal-600 rounded-xl border border-teal-300 professional-shadow">
+                    {/* Main Filter Section - Large Central Area */}
+                    <div className="absolute top-24 left-6 right-28 bottom-24 bg-gradient-to-b from-teal-500 to-teal-700 rounded-2xl border-2 border-teal-600 professional-shadow">
                       
-                      {/* VayuPod Branding */}
-                      <div className="text-center py-2 px-2">
-                        <div className="bg-white/90 rounded-lg py-1 px-2 border border-white/50">
-                          <div className="text-teal-800 text-sm font-bold">VayuPod</div>
-                          <div className="text-teal-700 text-xs">GEN-2</div>
-                        </div>
-                      </div>
-
-                      {/* Filter Pattern */}
-                      <div className="absolute top-16 left-2 right-2 bottom-16">
-                        <div className="grid grid-cols-6 grid-rows-8 h-full w-full gap-1">
-                          {Array.from({ length: 48 }).map((_, i) => (
-                            <div key={i} className="border border-teal-200 opacity-60 rounded-sm bg-teal-300/30"></div>
+                      {/* Filter Grid Pattern */}
+                      <div className="absolute inset-4">
+                        <div className="grid grid-cols-8 grid-rows-12 h-full w-full gap-1">
+                          {Array.from({ length: 96 }).map((_, i) => (
+                            <div key={i} className="border border-teal-300 bg-teal-400/30 rounded-sm"></div>
                           ))}
                         </div>
                       </div>
 
-                      {/* Filter Info */}
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <div className="bg-white/90 rounded-lg py-1 px-2 text-center border border-white/50">
-                          <div className="text-teal-800 text-xs font-bold">99.97% HEPA</div>
+                      {/* VayuPod Branding */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-white/95 rounded-xl py-4 px-6 text-center border-2 border-white shadow-lg">
+                          <div className="text-3xl font-bold text-teal-800">VayuPod</div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Air Quality Indicators - Left Side */}
-                    <div className="absolute top-36 left-2 space-y-1">
-                      <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-0.5">
-                        <div className="w-2 h-2 bg-green-400 rounded-full pulse-animation"></div>
-                        <span className="text-xs font-medium text-gray-700">PM2.5</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-0.5">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full pulse-animation" style={{ animationDelay: '0.5s' }}></div>
-                        <span className="text-xs font-medium text-gray-700">VOC</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-0.5">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full pulse-animation" style={{ animationDelay: '1s' }}></div>
-                        <span className="text-xs font-medium text-gray-700">PM10</span>
-                      </div>
+                    {/* Bottom Filter Label */}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-700 text-white px-6 py-3 rounded-lg text-center">
+                      <div className="text-lg font-bold">HEPA + CARBON</div>
+                      <div className="text-sm">FILTER</div>
                     </div>
                   </div>
 
                   {/* Base Section */}
-                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-gray-200 to-gray-300 rounded-b-2xl border-2 border-gray-400 border-t-0 professional-shadow">
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-gray-200 to-gray-300 rounded-b-2xl border-2 border-gray-400 border-t-0 professional-shadow">
                     
-                    {/* Base Info */}
-                    <div className="text-center pt-1">
-                      <div className="bg-gray-100 rounded px-2 py-0.5 mx-4 border border-gray-300">
-                        <div className="text-gray-800 text-xs font-bold">WEATHERPROOF</div>
-                      </div>
+                    {/* Weatherproof Label */}
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-gray-600 text-white px-4 py-1 rounded text-sm font-bold">
+                      WEATHERPROOF
                     </div>
                     
-                    {/* Ventilation */}
-                    <div className="absolute bottom-2 left-4 right-4 h-6 bg-gray-700 rounded professional-shadow">
-                      <div className="grid grid-cols-12 gap-0.5 h-full p-1">
-                        {Array.from({ length: 12 }).map((_, i) => (
-                          <div key={i} className="bg-gray-500 rounded-sm"></div>
+                    {/* Ventilation Grille */}
+                    <div className="absolute bottom-3 left-6 right-6 h-8 bg-gray-800 rounded-lg professional-shadow">
+                      <div className="grid grid-cols-16 gap-1 h-full p-1">
+                        {Array.from({ length: 16 }).map((_, i) => (
+                          <div key={i} className="bg-gray-600 rounded"></div>
                         ))}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Product Info - Separate from VayuPod */}
+                {/* Air Flow Indicators - Clean Air Out */}
+                <div className="absolute right-4 top-1/4 space-y-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div 
+                      key={`out-${i}`}
+                      className="w-8 h-2 bg-green-400 rounded-full air-flow-out opacity-60"
+                      style={{ animationDelay: `${i * 0.8}s` }}
+                    />
+                  ))}
+                  <div className="text-green-400 text-xs font-medium mt-2 -rotate-90 origin-center">
+                    Pure Air
+                  </div>
+                </div>
+
+                {/* Product Info */}
                 <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold mb-2 text-white">VayuPod Gen-2</h3>
-                  <p className="text-gray-300 mb-4">Professional Air Purification</p>
+                  <h3 className="text-3xl font-bold mb-2 text-white">VayuPod Gen-2</h3>
+                  <p className="text-gray-300 mb-6 text-lg">Professional Air Purification System</p>
                   
-                  {/* Status Indicators - Clean Layout */}
-                  <div className="grid grid-cols-2 gap-2 max-w-xs mx-auto">
-                    <div className="flex items-center gap-2 text-yellow-400 bg-gray-800/60 rounded-lg px-3 py-2 border border-yellow-400/20">
-                      <Sun className="w-4 h-4" />
+                  {/* Status Indicators */}
+                  <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                    <div className="flex items-center gap-2 text-yellow-400 bg-gray-800/60 rounded-lg px-4 py-3 border border-yellow-400/20">
+                      <Sun className="w-5 h-5" />
                       <span className="text-sm font-medium">Solar</span>
                     </div>
-                    <div className="flex items-center gap-2 text-blue-400 bg-gray-800/60 rounded-lg px-3 py-2 border border-blue-400/20">
-                      <Wifi className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-blue-400 bg-gray-800/60 rounded-lg px-4 py-3 border border-blue-400/20">
+                      <Wifi className="w-5 h-5" />
                       <span className="text-sm font-medium">5G+AI</span>
                     </div>
-                    <div className="flex items-center gap-2 text-teal-400 bg-gray-800/60 rounded-lg px-3 py-2 border border-teal-400/20">
-                      <Filter className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-teal-400 bg-gray-800/60 rounded-lg px-4 py-3 border border-teal-400/20">
+                      <Filter className="w-5 h-5" />
                       <span className="text-sm font-medium">HEPA</span>
                     </div>
-                    <div className="flex items-center gap-2 text-green-400 bg-gray-800/60 rounded-lg px-3 py-2 border border-green-400/20">
-                      <Gauge className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-green-400 bg-gray-800/60 rounded-lg px-4 py-3 border border-green-400/20">
+                      <Gauge className="w-5 h-5" />
                       <span className="text-sm font-medium">Weather</span>
                     </div>
                   </div>
