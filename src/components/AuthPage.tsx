@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Loader2, Mail, Lock, User, Wind } from 'lucide-react';
 
 const AuthPage = () => {
@@ -59,10 +59,10 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-vayu-dark to-vayu-dark-light flex flex-col items-center justify-center p-4">
-      {/* Logo Header */}
-      <div className="flex items-center space-x-2 mb-8">
-        <Wind className="h-10 w-10 text-vayu-mint" />
-        <span className="text-3xl font-bold text-white">AeroSage Vayu</span>
+      {/* Logo Header - Fixed styling for single line display */}
+      <div className="flex items-center justify-center space-x-3 mb-8">
+        <Wind className="h-8 w-8 text-vayu-mint flex-shrink-0" />
+        <span className="text-2xl md:text-3xl font-bold text-white whitespace-nowrap">AeroSage Vayu</span>
       </div>
 
       <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border-white/20">
@@ -150,6 +150,14 @@ const AuthPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Back to Home Link - Added at the bottom */}
+      <Link 
+        to="/" 
+        className="text-vayu-mint hover:text-vayu-mint-dark mt-6 underline transition-colors duration-200"
+      >
+        ← Back to Home
+      </Link>
     </div>
   );
 };
