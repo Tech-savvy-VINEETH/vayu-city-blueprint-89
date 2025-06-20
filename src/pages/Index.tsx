@@ -9,6 +9,7 @@ import BlogSection from "@/components/BlogSection";
 import ChatbotSection from "@/components/ChatbotSection";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
+import VayuBot from "@/components/VayuBot";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
@@ -29,6 +30,9 @@ const Index = () => {
       <BlogSection />
       <ChatbotSection />
       <Footer />
+      
+      {/* VayuBot - Animated chatbot in corner */}
+      <VayuBot />
     </div>
   );
 };
