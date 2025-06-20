@@ -6,7 +6,7 @@ import VayuScoreSection from "@/components/VayuScoreSection";
 import ImpactSection from "@/components/ImpactSection";
 import PartnersSection from "@/components/PartnersSection";
 import BlogSection from "@/components/BlogSection";
-import ContactSection from "@/components/ContactSection";
+import ChatbotSection from "@/components/ChatbotSection";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,7 +27,7 @@ const Index = () => {
       <ImpactSection />
       <PartnersSection />
       <BlogSection />
-      <ContactSection />
+      <ChatbotSection />
       <Footer />
     </div>
   );
