@@ -124,6 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithPhone = async (phone: string) => {
+    // Optimized for faster response - don't wait for full processing
     const { error } = await supabase.auth.signInWithOtp({
       phone,
       options: {
@@ -143,7 +144,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Store credentials for successful phone login
     if (!error && data.user) {
-      await storeLoginCredentials(data.user, phone, 'phone_otp');
+      // Run in background for faster response
+      setTimeout(() => {
+        storeLoginCredentials(data.user, phone, 'phone_otp');
+      }, 0);
     }
     
     return { error };

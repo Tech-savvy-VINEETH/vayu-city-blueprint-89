@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,7 @@ const AuthPage = () => {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
   const { user, signIn, signUp, signInWithPhone, verifyOTP } = useAuth();
   const { toast } = useToast();
 
@@ -26,6 +26,33 @@ const AuthPage = () => {
   if (user) {
     return <Navigate to="/" replace />;
   }
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, '');
+    
+    // If it starts with +91, keep it
+    if (value.startsWith('+91')) {
+      return '+91' + digits.slice(2, 12); // Limit to 10 digits after +91
+    }
+    
+    // If it starts with 91, add +
+    if (digits.startsWith('91') && digits.length > 2) {
+      return '+91' + digits.slice(2, 12);
+    }
+    
+    // If it's just digits, add +91
+    if (digits.length > 0) {
+      return '+91' + digits.slice(0, 10);
+    }
+    
+    return '+91';
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setPhone(formatted);
+  };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,11 +90,19 @@ const AuthPage = () => {
 
   const handlePhoneAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       if (!otpSent) {
+        setOtpLoading(true);
+        
+        // Optimistic UI for faster response
+        toast({
+          title: "Sending OTP...",
+          description: "Please wait while we send the verification code.",
+        });
+
         const { error } = await signInWithPhone(phone);
+        
         if (error) {
           toast({
             title: "Error",
@@ -77,23 +112,35 @@ const AuthPage = () => {
         } else {
           setOtpSent(true);
           toast({
-            title: "OTP Sent",
-            description: "Please check your phone for the verification code.",
+            title: "OTP Sent Successfully",
+            description: "Please check your phone for the 6-digit verification code.",
           });
         }
+        setOtpLoading(false);
       } else {
+        setLoading(true);
+        
+        // Optimistic UI
+        toast({
+          title: "Verifying OTP...",
+          description: "Please wait while we verify your code.",
+        });
+
         const { error } = await verifyOTP(phone, otp);
+        
         if (error) {
           toast({
             title: "Verification Error",
             description: error.message,
             variant: "destructive",
           });
+          setLoading(false);
         } else {
           toast({
             title: "Welcome!",
-            description: "You have successfully signed in.",
+            description: "You have successfully signed in with your phone number.",
           });
+          // Don't set loading to false here as user will be redirected
         }
       }
     } catch (error) {
@@ -102,15 +149,15 @@ const AuthPage = () => {
         description: "An unexpected error occurred.",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
+      setOtpLoading(false);
     }
   };
 
   const resetPhoneAuth = () => {
     setOtpSent(false);
     setOtp('');
-    setPhone('');
+    setPhone('+91');
   };
 
   return (
@@ -134,7 +181,7 @@ const AuthPage = () => {
           <Tabs defaultValue="email" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="email" className="text-sm">Email</TabsTrigger>
-              <TabsTrigger value="phone" className="text-sm">Phone</TabsTrigger>
+              <TabsTrigger value="phone" className="text-sm">Phone (India)</TabsTrigger>
             </TabsList>
             
             <TabsContent value="email">
@@ -206,20 +253,24 @@ const AuthPage = () => {
             <TabsContent value="phone">
               <form onSubmit={handlePhoneAuth} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-white">Phone Number (India)</Label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="+1234567890"
+                      placeholder="+91XXXXXXXXXX"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
                       required
                       disabled={otpSent}
+                      maxLength={13}
                     />
                   </div>
+                  <p className="text-xs text-gray-400">
+                    Enter your Indian phone number. Format: +91XXXXXXXXXX
+                  </p>
                 </div>
                 
                 {otpSent && (
@@ -232,12 +283,16 @@ const AuthPage = () => {
                         type="text"
                         placeholder="Enter 6-digit code"
                         value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-center tracking-widest"
                         required
                         maxLength={6}
+                        autoComplete="one-time-code"
                       />
                     </div>
+                    <p className="text-xs text-gray-400">
+                      Enter the 6-digit code sent to {phone}
+                    </p>
                   </div>
                 )}
                 
@@ -245,12 +300,12 @@ const AuthPage = () => {
                   <Button
                     type="submit"
                     className="w-full bg-vayu-mint hover:bg-vayu-mint-dark text-white"
-                    disabled={loading}
+                    disabled={loading || otpLoading || (phone.length < 13)}
                   >
-                    {loading ? (
+                    {(loading || otpLoading) ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     ) : null}
-                    {otpSent ? 'Verify Code' : 'Send Code'}
+                    {otpSent ? 'Verify Code' : 'Send OTP'}
                   </Button>
                   
                   {otpSent && (
@@ -259,6 +314,7 @@ const AuthPage = () => {
                       variant="outline"
                       onClick={resetPhoneAuth}
                       className="w-full border-white/20 text-white hover:bg-white/10"
+                      disabled={loading}
                     >
                       Use Different Number
                     </Button>

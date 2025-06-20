@@ -5,6 +5,7 @@ import { Menu, X, Wind, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import UserMenu from './UserMenu';
+import AuthGuard from './AuthGuard';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +30,14 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
+  const handleProtectedNavigation = (href: string) => {
+    if (!user) {
+      // If user is not logged in, show auth requirement
+      return;
+    }
+    scrollToSection(href);
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-vayu-dark/80 backdrop-blur-sm border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,24 +51,44 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <button
+              <AuthGuard
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium"
+                fallback={
+                  <Link to="/auth">
+                    <button className="text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium">
+                      {item.name}
+                    </button>
+                  </Link>
+                }
               >
-                {item.name}
-              </button>
+                <button
+                  onClick={() => scrollToSection(item.href)}
+                  className="text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium"
+                >
+                  {item.name}
+                </button>
+              </AuthGuard>
             ))}
           </div>
 
           {/* Auth Section */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Link 
-              to="/eco-routing"
-              className="text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium"
+            <AuthGuard
+              fallback={
+                <Link to="/auth">
+                  <span className="text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium cursor-pointer">
+                    Eco Routing
+                  </span>
+                </Link>
+              }
             >
-              Eco Routing
-            </Link>
+              <Link 
+                to="/eco-routing"
+                className="text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium"
+              >
+                Eco Routing
+              </Link>
+            </AuthGuard>
             {!authLoading && (
               user ? (
                 <UserMenu />
@@ -93,22 +122,42 @@ const Navigation = () => {
           <div className="lg:hidden py-4 bg-vayu-dark/95 backdrop-blur-sm">
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => (
-                <button
+                <AuthGuard
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-left text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-4 py-2"
+                  fallback={
+                    <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                      <button className="text-left text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-4 py-2">
+                        {item.name}
+                      </button>
+                    </Link>
+                  }
                 >
-                  {item.name}
-                </button>
+                  <button
+                    onClick={() => scrollToSection(item.href)}
+                    className="text-left text-gray-300 hover:text-vayu-mint transition-colors duration-200 font-medium px-4 py-2"
+                  >
+                    {item.name}
+                  </button>
+                </AuthGuard>
               ))}
               <div className="border-t border-white/10 pt-4 px-4">
-                <Link 
-                  to="/eco-routing"
-                  className="block text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium mb-4"
-                  onClick={() => setIsMenuOpen(false)}
+                <AuthGuard
+                  fallback={
+                    <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                      <span className="block text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium mb-4 cursor-pointer">
+                        Eco Routing
+                      </span>
+                    </Link>
+                  }
                 >
-                  Eco Routing
-                </Link>
+                  <Link 
+                    to="/eco-routing"
+                    className="block text-vayu-mint hover:text-vayu-mint-dark transition-colors duration-200 font-medium mb-4"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Eco Routing
+                  </Link>
+                </AuthGuard>
                 {!authLoading && (
                   user ? (
                     <UserMenu />
