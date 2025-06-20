@@ -244,7 +244,7 @@ Our team will contact you within 24 hours. Is there anything else I can help you
         </div>
 
         {/* Contact Information Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
           <Card className="p-6 border-l-4 border-l-vayu-mint">
             <CardContent className="p-0">
               <div className="flex items-start gap-4">
@@ -315,22 +315,6 @@ Our team will contact you within 24 hours. Is there anything else I can help you
                     Send Message
                   </Button>
                 </form>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="p-6 border-l-4 border-l-gray-400">
-            <CardContent className="p-0">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <Bot className="h-6 w-6 text-gray-600" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-vayu-dark mb-2">Smart Features</h4>
-                  <p className="text-vayu-blue-dark">Form collection</p>
-                  <p className="text-vayu-blue-dark">Technical support</p>
-                  <p className="text-vayu-blue-dark">Partnership guidance</p>
-                </div>
               </div>
             </CardContent>
           </Card>
