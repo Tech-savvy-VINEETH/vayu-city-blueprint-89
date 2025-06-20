@@ -26,15 +26,12 @@ const NewsletterSubscription = () => {
     setIsLoading(true);
 
     try {
-      // Insert subscription into database
+      // Optimized database operation with minimal data
       const { error } = await supabase
         .from('newsletter_subscriptions')
-        .insert([
-          {
-            email: email.toLowerCase().trim(),
-            is_active: true
-          }
-        ]);
+        .insert({
+          email: email.toLowerCase().trim()
+        });
 
       if (error) {
         if (error.code === '23505') { // Unique constraint violation
@@ -49,7 +46,7 @@ const NewsletterSubscription = () => {
       } else {
         toast({
           title: "Successfully Subscribed!",
-          description: "Thank you for subscribing to our newsletter. You'll receive updates about clean air technology and environmental news.",
+          description: "Thank you for subscribing to our newsletter.",
         });
         setEmail('');
       }
@@ -57,7 +54,7 @@ const NewsletterSubscription = () => {
       console.error('Newsletter subscription error:', error);
       toast({
         title: "Subscription Failed",
-        description: "There was an error subscribing to the newsletter. Please try again.",
+        description: "Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -85,7 +82,7 @@ const NewsletterSubscription = () => {
           <Button 
             type="submit"
             className="bg-vayu-mint hover:bg-vayu-mint-dark text-white px-6"
-            disabled={isLoading}
+            disabled={isLoading || !email}
           >
             {isLoading ? 'Subscribing...' : 'Subscribe'}
           </Button>
