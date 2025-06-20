@@ -2,7 +2,7 @@
 import { Article } from './types';
 
 export const fetchRSSFeeds = async (): Promise<Article[]> => {
-  // Simulated RSS feed data (in a real implementation, you'd use a RSS parser)
+  // Simulated RSS feed data with proper URLs
   const rssArticles = [
     {
       title: "EPA Releases New Air Quality Standards for Urban Areas",
@@ -15,6 +15,7 @@ export const fetchRSSFeeds = async (): Promise<Article[]> => {
       readTime: "5 min read",
       category: "Policy",
       source: "EPA Environmental Feed",
+      url: "https://www.epa.gov/naaqs",
       sourceType: 'rss' as const
     },
     {
@@ -28,6 +29,7 @@ export const fetchRSSFeeds = async (): Promise<Article[]> => {
       readTime: "6 min read",
       category: "Research",
       source: "WHO Environmental Health",
+      url: "https://www.who.int/data/gho/data/themes/air-pollution",
       sourceType: 'rss' as const
     }
   ];

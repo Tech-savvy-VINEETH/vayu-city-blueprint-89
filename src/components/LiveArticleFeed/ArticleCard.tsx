@@ -18,7 +18,18 @@ const ArticleCard = ({ article, index }: ArticleCardProps) => {
 
   const handleReadMore = () => {
     if (article.url) {
-      window.open(article.url, '_blank', 'noopener,noreferrer');
+      try {
+        // Ensure the URL is properly formatted
+        const url = article.url.startsWith('http') ? article.url : `https://${article.url}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+        console.log(`Opening article: ${article.title} at ${url}`);
+      } catch (error) {
+        console.error('Error opening article URL:', error);
+        // Fallback: try to open the URL anyway
+        window.open(article.url, '_blank', 'noopener,noreferrer');
+      }
+    } else {
+      console.warn('No URL available for article:', article.title);
     }
   };
 
@@ -43,7 +54,10 @@ const ArticleCard = ({ article, index }: ArticleCardProps) => {
           </div>
         </div>
         
-        <h4 className="text-xl font-bold text-vayu-dark mb-3 hover:text-vayu-mint transition-colors cursor-pointer">
+        <h4 
+          className="text-xl font-bold text-vayu-dark mb-3 hover:text-vayu-mint transition-colors cursor-pointer"
+          onClick={handleReadMore}
+        >
           {article.title}
         </h4>
         
@@ -53,11 +67,10 @@ const ArticleCard = ({ article, index }: ArticleCardProps) => {
           <span className="text-sm text-vayu-blue">Source: {article.source}</span>
           <Button 
             variant="ghost" 
-            className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium"
+            className="text-vayu-mint hover:text-vayu-mint-dark p-0 h-auto font-medium hover:bg-transparent"
             onClick={handleReadMore}
-            disabled={!article.url}
           >
-            {article.url ? 'Read Full Article' : 'Read More'}
+            Read Full Article
             <ExternalLink className="h-4 w-4 ml-2" />
           </Button>
         </div>
