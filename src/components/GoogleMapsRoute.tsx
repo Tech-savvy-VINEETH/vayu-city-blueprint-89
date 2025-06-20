@@ -20,6 +20,12 @@ interface GoogleMapsRouteProps {
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBgWUsl5xqGurfpFX8JHujwP5R_vMUvMt4';
 const AQI_API_KEY = '5388f47367afb7ad32ca4c7edc83d21e';
 
+declare global {
+  interface Window {
+    google: typeof google;
+  }
+}
+
 const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
   routes,
   selectedRoute,
@@ -49,7 +55,7 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
       try {
         await loader.load();
         
-        const mapInstance = new google.maps.Map(mapRef.current, {
+        const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : { lat: 28.6139, lng: 77.2090 },
           zoom: 12,
           styles: [
@@ -71,8 +77,8 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
           ]
         });
 
-        const dirService = new google.maps.DirectionsService();
-        const dirRenderer = new google.maps.DirectionsRenderer({
+        const dirService = new window.google.maps.DirectionsService();
+        const dirRenderer = new window.google.maps.DirectionsRenderer({
           suppressMarkers: false,
           polylineOptions: {
             strokeColor: '#10b981',
@@ -89,12 +95,12 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
 
         // Add user location marker
         if (userLocation) {
-          new google.maps.Marker({
+          new window.google.maps.Marker({
             position: { lat: userLocation.lat, lng: userLocation.lng },
             map: mapInstance,
             title: 'Your Location',
             icon: {
-              path: google.maps.SymbolPath.CIRCLE,
+              path: window.google.maps.SymbolPath.CIRCLE,
               scale: 8,
               fillColor: '#3b82f6',
               fillOpacity: 1,
@@ -128,7 +134,7 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
         destination: endLocation,
         travelMode: getTravelMode(travelMode),
         provideRouteAlternatives: true,
-        unitSystem: google.maps.UnitSystem.METRIC
+        unitSystem: window.google.maps.UnitSystem.METRIC
       };
 
       const result = await directionsService.route(request);
@@ -150,9 +156,9 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
 
   const getTravelMode = (mode: string): google.maps.TravelMode => {
     switch (mode) {
-      case 'bike': return google.maps.TravelMode.BICYCLING;
-      case 'public': return google.maps.TravelMode.TRANSIT;
-      default: return google.maps.TravelMode.DRIVING;
+      case 'bike': return window.google.maps.TravelMode.BICYCLING;
+      case 'public': return window.google.maps.TravelMode.TRANSIT;
+      default: return window.google.maps.TravelMode.DRIVING;
     }
   };
 
