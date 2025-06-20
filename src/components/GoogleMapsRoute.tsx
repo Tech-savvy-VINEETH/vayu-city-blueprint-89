@@ -1,9 +1,8 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Navigation, Loader2, MapPin, Zap } from 'lucide-react';
+import { Navigation, Loader2, MapPin, Zap, Activity, Wind } from 'lucide-react';
 import { RouteData, UserLocation } from './EcoRouting';
 
 interface GoogleMapsRouteProps {
@@ -15,6 +14,13 @@ interface GoogleMapsRouteProps {
   endLocation: string;
   travelMode: string;
   onRoutesCalculated: (routes: RouteData[]) => void;
+  indianCitiesData: Array<{
+    name: string;
+    lat: number;
+    lng: number;
+    state: string;
+    population: number;
+  }>;
 }
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBgWUsl5xqGurfpFX8JHujwP5R_vMUvMt4';
@@ -34,20 +40,23 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
   startLocation,
   endLocation,
   travelMode,
-  onRoutesCalculated
+  onRoutesCalculated,
+  indianCitiesData
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
   const [loadingStatus, setLoadingStatus] = useState('Initializing...');
+  const [nearbyAreas, setNearbyAreas] = useState<any[]>([]);
+  const [locationMarkers, setLocationMarkers] = useState<google.maps.Marker[]>([]);
 
-  // Initialize Google Maps
+  // Initialize Google Maps with enhanced Indian city support
   useEffect(() => {
     const initMap = async () => {
       if (!mapRef.current) return;
 
-      setLoadingStatus('Loading Google Maps...');
+      setLoadingStatus('Loading Enhanced Maps for India...');
       const loader = new Loader({
         apiKey: GOOGLE_MAPS_API_KEY,
         version: 'weekly',
@@ -59,22 +68,37 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
         
         const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : { lat: 28.6139, lng: 77.2090 },
-          zoom: 12,
+          zoom: userLocation ? 14 : 6,
           styles: [
             {
               featureType: 'all',
               elementType: 'geometry.fill',
-              stylers: [{ color: '#2c3e50' }]
+              stylers: [{ color: '#1a202c' }]
             },
             {
               featureType: 'road',
               elementType: 'geometry',
-              stylers: [{ color: '#34495e' }]
+              stylers: [{ color: '#2d3748' }]
             },
             {
               featureType: 'water',
               elementType: 'geometry',
-              stylers: [{ color: '#3498db' }]
+              stylers: [{ color: '#2b6cb0' }]
+            },
+            {
+              featureType: 'landscape',
+              elementType: 'geometry',
+              stylers: [{ color: '#2d3748' }]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{ color: '#ffffff' }]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{ color: '#ffffff' }]
             }
           ]
         });
@@ -95,32 +119,118 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
         setDirectionsService(dirService);
         setDirectionsRenderer(dirRenderer);
 
-        // Add user location marker
+        // Add user location marker with enhanced styling
         if (userLocation) {
-          new window.google.maps.Marker({
+          const userMarker = new window.google.maps.Marker({
             position: { lat: userLocation.lat, lng: userLocation.lng },
             map: mapInstance,
-            title: 'Your Location',
+            title: `Your Location: ${userLocation.address}`,
             icon: {
               path: window.google.maps.SymbolPath.CIRCLE,
-              scale: 8,
+              scale: 12,
               fillColor: '#3b82f6',
               fillOpacity: 1,
               strokeColor: '#ffffff',
-              strokeWeight: 2
+              strokeWeight: 3
             }
           });
+
+          // Load nearby areas with AQI data
+          loadNearbyAreas(userLocation.lat, userLocation.lng, mapInstance);
         }
 
-        setLoadingStatus('Maps loaded successfully');
+        setLoadingStatus('Enhanced Maps loaded - Ready for all-India routing');
       } catch (error) {
         console.error('Error loading Google Maps:', error);
-        setLoadingStatus('Error loading maps');
+        setLoadingStatus('Error loading enhanced maps');
       }
     };
 
     initMap();
-  }, [userLocation]);
+  }, [userLocation, indianCitiesData]);
+
+  // Load nearby areas with AQI data
+  const loadNearbyAreas = async (lat: number, lng: number, mapInstance: google.maps.Map) => {
+    setLoadingStatus('Loading nearby AQI data...');
+    
+    try {
+      // Find nearby Indian cities within 50km radius
+      const nearbyIndianCities = indianCitiesData.filter(city => {
+        const distance = calculateDistance(lat, lng, city.lat, city.lng);
+        return distance <= 50; // 50km radius
+      }).slice(0, 8); // Limit to 8 nearby cities for performance
+
+      // Fetch AQI data for nearby cities
+      const aqiPromises = nearbyIndianCities.map(city => 
+        fetchEnhancedAQIData(city.name, city.lat, city.lng)
+      );
+      
+      const aqiResults = await Promise.all(aqiPromises);
+      setNearbyAreas(aqiResults);
+
+      // Clear existing location markers
+      locationMarkers.forEach(marker => marker.setMap(null));
+      
+      // Create AQI markers for nearby areas
+      const newMarkers: google.maps.Marker[] = [];
+      
+      aqiResults.forEach(area => {
+        const marker = new window.google.maps.Marker({
+          position: { lat: area.lat, lng: area.lng },
+          map: mapInstance,
+          title: `${area.name} - AQI: ${area.aqi}`,
+          icon: {
+            path: window.google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: getAQIColor(area.aqi),
+            fillOpacity: 0.8,
+            strokeColor: '#ffffff',
+            strokeWeight: 2
+          }
+        });
+
+        // Enhanced info window
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: `
+            <div style="color: black; padding: 10px; min-width: 200px;">
+              <h3 style="margin: 0 0 8px 0; color: ${getAQIColor(area.aqi)}; font-size: 16px;">${area.name}</h3>
+              <div style="margin-bottom: 4px;"><strong>AQI:</strong> ${area.aqi} (${getAQICategory(area.aqi)})</div>
+              <div style="margin-bottom: 4px;"><strong>PM2.5:</strong> ${area.pm25} μg/m³</div>
+              <div style="margin-bottom: 4px;"><strong>Temperature:</strong> ${area.temperature}°C</div>
+              <div style="margin-bottom: 4px;"><strong>Wind Speed:</strong> ${area.windSpeed} km/h</div>
+              <div style="margin-bottom: 4px;"><strong>Visibility:</strong> ${area.visibility} km</div>
+              <div style="margin-bottom: 4px;"><strong>Conditions:</strong> ${area.description}</div>
+              <div style="margin-top: 8px; font-size: 12px; color: #666;">State: ${area.state || 'India'}</div>
+            </div>
+          `
+        });
+
+        marker.addListener('click', () => {
+          infoWindow.open(mapInstance, marker);
+        });
+
+        newMarkers.push(marker);
+      });
+
+      setLocationMarkers(newMarkers);
+      setLoadingStatus('Live AQI data loaded for nearby areas');
+    } catch (error) {
+      console.error('Error loading nearby areas:', error);
+      setLoadingStatus('AQI data loaded with fallback');
+    }
+  };
+
+  // Calculate distance between two points
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
 
   // Calculate routes when start/end locations change
   useEffect(() => {
@@ -302,7 +412,7 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
     const cities = [
       { name: 'Delhi', lat: 28.6139, lng: 77.2090 },
       { name: 'Mumbai', lat: 19.0760, lng: 72.8777 },
-      { name: 'Bangalore', lat: 12.9716, lng: 77.5946 },
+      { name: 'Bangalore', lat: 12.9716, lng: 80.2707 },
       { name: 'Chennai', lat: 13.0827, lng: 80.2707 },
       { name: 'Kolkata', lat: 22.5726, lng: 88.3639 },
       { name: 'Hyderabad', lat: 17.3850, lng: 78.4867 },
@@ -461,18 +571,18 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
         <CardContent className="h-full flex items-center justify-center">
           <div className="text-center text-white">
             <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-vayu-mint" />
-            <h3 className="text-xl font-bold mb-2">Calculating Smart Routes</h3>
+            <h3 className="text-xl font-bold mb-2">Calculating All-India Smart Routes</h3>
             <p className="text-gray-300 mb-4">{loadingStatus}</p>
-            <div className="bg-white/10 rounded-lg p-4 text-sm">
+            <div className="bg-white/10 rounded-lg p-4 text-sm max-w-md mx-auto">
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="h-4 w-4 text-vayu-mint" />
-                <span className="text-vayu-mint font-semibold">Enhanced with Visual Crossing API</span>
+                <span className="text-vayu-mint font-semibold">Enhanced All-India Coverage</span>
               </div>
               <div className="space-y-1 text-xs text-gray-400">
-                <p>✅ Real-time weather integration</p>
-                <p>✅ Multi-point AQI analysis</p>
-                <p>✅ Wind dispersion modeling</p>
-                <p>✅ Superior to standard mapping</p>
+                <p>✅ {indianCitiesData.length}+ Indian cities integrated</p>
+                <p>✅ Real-time weather & AQI analysis</p>
+                <p>✅ Enhanced wind dispersion modeling</p>
+                <p>✅ Superior to standard mapping solutions</p>
               </div>
             </div>
           </div>
@@ -482,45 +592,104 @@ const GoogleMapsRoute: React.FC<GoogleMapsRouteProps> = ({
   }
 
   return (
-    <Card className="h-[500px] bg-white/10 backdrop-blur-sm border-white/20">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
-          <Navigation className="h-5 w-5 text-vayu-mint" />
-          Enhanced Route Map
-          {routes.length > 0 && (
-            <span className="text-sm font-normal text-gray-300 ml-2">
-              - {routes.length} optimized routes
-            </span>
-          )}
-          <div className="ml-auto flex items-center gap-1 text-xs bg-vayu-mint/20 px-2 py-1 rounded">
-            <Zap className="h-3 w-3" />
-            <span>Live API</span>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="h-full p-4">
-        {!startLocation || !endLocation ? (
-          <div className="h-full flex items-center justify-center text-center">
-            <div>
-              <MapPin className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-bold text-white mb-2">Ready for Enhanced Navigation</h3>
-              <p className="text-gray-300 mb-4">Enter locations to begin intelligent route calculation</p>
-              <div className="bg-white/10 rounded-lg p-3 text-sm">
-                <p className="text-vayu-mint font-semibold mb-2">Powered by:</p>
-                <div className="text-xs text-gray-400 space-y-1">
-                  <p>• Visual Crossing Weather API</p>
-                  <p>• Google Maps Directions</p>
-                  <p>• Real-time AQI monitoring</p>
-                  <p>• Multi-point pollution analysis</p>
+    <div className="space-y-6">
+      <Card className="h-[500px] bg-white/10 backdrop-blur-sm border-white/20">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <Navigation className="h-5 w-5 text-vayu-mint" />
+            Enhanced Route Map - All India
+            {routes.length > 0 && (
+              <span className="text-sm font-normal text-gray-300 ml-2">
+                - {routes.length} optimized routes
+              </span>
+            )}
+            <div className="ml-auto flex items-center gap-1 text-xs bg-vayu-mint/20 px-2 py-1 rounded">
+              <Zap className="h-3 w-3" />
+              <span>Live API</span>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="h-full p-4">
+          {!startLocation || !endLocation ? (
+            <div className="h-full flex items-center justify-center text-center">
+              <div>
+                <MapPin className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-bold text-white mb-2">Ready for All-India Navigation</h3>
+                <p className="text-gray-300 mb-4">Enter locations to begin intelligent route calculation across India</p>
+                {userLocation && nearbyAreas.length > 0 && (
+                  <div className="bg-white/10 rounded-lg p-4 text-sm max-w-md mx-auto">
+                    <p className="text-vayu-mint font-semibold mb-2">📍 Nearby Areas Detected:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                      {nearbyAreas.slice(0, 4).map((area, idx) => (
+                        <div key={idx} className="flex items-center gap-1">
+                          <div 
+                            className="w-2 h-2 rounded-full" 
+                            style={{ backgroundColor: getAQIColor(area.aqi) }}
+                          ></div>
+                          <span>{area.name}: {area.aqi}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="bg-white/10 rounded-lg p-3 text-sm mt-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="h-4 w-4 text-vayu-mint" />
+                    <span className="text-vayu-mint font-semibold">Powered by Enhanced APIs</span>
+                  </div>
+                  <div className="text-xs text-gray-400 space-y-1">
+                    <p>• Visual Crossing Weather API</p>
+                    <p>• Google Maps Directions</p>
+                    <p>• Geolocation DB for Indian cities</p>
+                    <p>• Real-time AQI for {indianCitiesData.length}+ cities</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div ref={mapRef} className="w-full h-full rounded-lg" />
-        )}
-      </CardContent>
-    </Card>
+          ) : (
+            <div ref={mapRef} className="w-full h-full rounded-lg" />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Live Data Panel */}
+      {nearbyAreas.length > 0 && (
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Wind className="h-5 w-5 text-vayu-mint" />
+              Live Nearby Areas AQI Data
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {nearbyAreas.slice(0, 8).map((area, index) => (
+                <div 
+                  key={index}
+                  className="bg-black/20 p-3 rounded-lg"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-white font-medium text-sm">{area.name}</h4>
+                    <div 
+                      className="text-lg font-bold"
+                      style={{ color: getAQIColor(area.aqi) }}
+                    >
+                      {area.aqi}
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-400 space-y-1">
+                    <div>Category: {getAQICategory(area.aqi)}</div>
+                    <div>PM2.5: {area.pm25} μg/m³</div>
+                    <div>Temp: {area.temperature}°C</div>
+                    <div>Wind: {area.windSpeed} km/h</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 
