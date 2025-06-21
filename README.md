@@ -2,8 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/9e3f016d-b1d0-43f4-bbb7-6b95a8511295
-
+**URL**: https://aero-sage-vayu.lovable.app/
 ## How can I edit this code?
 
 There are several ways of editing your application.
